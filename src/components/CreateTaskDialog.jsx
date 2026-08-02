@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { addTask } from "../features/workspaceSlice";
 import { format } from "date-fns";
 
 export default function CreateTaskDialog({ showCreateTask, setShowCreateTask, projectId }) {
     const currentWorkspace = useSelector((state) => state.workspace?.currentWorkspace || null);
+    const dispatch = useDispatch();
     const project = currentWorkspace?.projects.find((p) => p.id === projectId);
     const teamMembers = project?.members || [];
 
@@ -19,11 +22,69 @@ export default function CreateTaskDialog({ showCreateTask, setShowCreateTask, pr
         due_date: "",
     });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
+  if (!formData.title.trim()) {
+    toast.error("Task title is required");
+    return;
+  }
 
+  if (!formData.due_date) {
+    toast.error("Due date is required");
+    return;
+  }
+
+  try {
+    setIsSubmitting(true);
+
+    const selectedAssignee =
+      teamMembers.find(
+        (member) => member?.user?.id === formData.assigneeId
+      )?.user || null;
+
+    const now = new Date().toISOString();
+
+    const newTask = {
+      id: crypto.randomUUID(),
+      projectId,
+      title: formData.title.trim(),
+      description: formData.description.trim(),
+      type: formData.type,
+      status: formData.status,
+      priority: formData.priority,
+      assigneeId: formData.assigneeId || null,
+      due_date: new Date(
+        `${formData.due_date}T00:00:00`
+      ).toISOString(),
+      createdAt: now,
+      updatedAt: now,
+      assignee: selectedAssignee,
+      comments: [],
     };
+
+    dispatch(addTask(newTask));
+
+    toast.success("Task created successfully");
+
+    setFormData({
+      title: "",
+      description: "",
+      type: "TASK",
+      status: "TODO",
+      priority: "MEDIUM",
+      assigneeId: "",
+      due_date: "",
+    });
+
+    setShowCreateTask(false);
+  } catch (error) {
+    console.error("Failed to create task:", error);
+    toast.error("Unable to create task");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
     return showCreateTask ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 dark:bg-black/60 backdrop-blur">
