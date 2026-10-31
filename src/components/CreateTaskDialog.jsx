@@ -8,7 +8,7 @@ export default function CreateTaskDialog({ showCreateTask, setShowCreateTask, pr
     const project = currentWorkspace?.projects.find((p) => p.id === projectId);
     const teamMembers = project?.members || [];
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitting, _setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         title: "",
         description: "",

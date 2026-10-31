@@ -16,7 +16,7 @@ export default function ProjectSettings({ project }) {
     });
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitting, _setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
