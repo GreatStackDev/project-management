@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI
 
 on:
   push:
@@ -10,57 +10,15 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: ci-cd-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  ci:
-    name: Lint and Build
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build
-
-  deploy:
-    name: Deploy to Vercel (production)
-    needs: ci
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Pull Vercel environment information
-        run: npx --yes vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
-
-      - name: Build project artifacts
-        run: npx --yes vercel@latest build --prod --token="$VERCEL_TOKEN"
-
-      - name: Deploy prebuilt output to production
-        run: npx --yes vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
