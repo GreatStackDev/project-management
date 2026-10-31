@@ -18,7 +18,7 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
         progress: 0,
     });
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitting, _setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

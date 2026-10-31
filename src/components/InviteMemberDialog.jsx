@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 const InviteMemberDialog = ({ isDialogOpen, setIsDialogOpen }) => {
 
     const currentWorkspace = useSelector((state) => state.workspace?.currentWorkspace || null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitting, _setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
         role: "org:member",

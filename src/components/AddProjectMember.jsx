@@ -15,7 +15,7 @@ const AddProjectMember = ({ isDialogOpen, setIsDialogOpen }) => {
     const projectMembersEmails = project?.members.map((member) => member.user.email);
 
     const [email, setEmail] = useState('');
-    const [isAdding, setIsAdding] = useState(false);
+    const [isAdding, _setIsAdding] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
