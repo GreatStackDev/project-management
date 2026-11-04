@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
+    "inngest": "npx inngest-cli@latest dev -u http://localhost:5000/api/inngest",
     "postinstall": "prisma generate"
   },
   "keywords": [],
@@ -21,7 +22,8 @@
     "@prisma/client": "^7.10.1",
     "cors": "^2.8.6",
     "dotenv": "^18.0.9",
-    "express": "^5.3.0"
+    "express": "^5.3.0",
+    "inngest": "^4.26.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.14",
