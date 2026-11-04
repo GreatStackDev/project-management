@@ -4,9 +4,9 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -14,11 +14,17 @@
   "description": "",
   "dependencies": {
     "@clerk/express": "^2.1.86",
+    "@neon/config": "^1.10.1",
+    "@neon/env": "^1.6.9",
+    "@neondatabase/serverless": "^1.2.0",
+    "@prisma/adapter-neon": "^7.10.1",
+    "@prisma/client": "^7.10.1",
     "cors": "^2.8.6",
     "dotenv": "^18.0.9",
     "express": "^5.3.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "prisma": "^7.10.1"
   }
 }

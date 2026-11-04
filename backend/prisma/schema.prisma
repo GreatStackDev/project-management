@@ -1,12 +1,10 @@
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["driverAdapters"]
+    provider = "prisma-client-js"
 }
 
+// Connection URLs live in prisma.config.js (CLI) and lib/prisma.js (runtime adapter)
 datasource db {
-    provider  = "postgresql"
-    url       = env("DATABASE_URL")
-    directUrl = env("DIRECT_URL")
+    provider = "postgresql"
 }
 
 enum WorkspaceRole {
