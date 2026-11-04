@@ -5,16 +5,31 @@ import { Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadTheme } from '../features/themeSlice'
 import { Loader2Icon } from 'lucide-react'
+import { useUser, SignIn } from '@clerk/react'
 
 const Layout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const { loading } = useSelector((state) => state.workspace)
     const dispatch = useDispatch()
+    const { user, isLoaded } = useUser()
 
     // Initial load of theme
     useEffect(() => {
         dispatch(loadTheme())
     }, [])
+
+    // Wait for Clerk to resolve the session so signed-in users don't flash the sign-in form
+    if (!isLoaded) return (
+        <div className='flex items-center justify-center h-screen bg-white dark:bg-zinc-950'>
+            <Loader2Icon className="size-7 text-blue-500 animate-spin" />
+        </div>
+    )
+
+    if (!user) return (
+        <div className='flex items-center justify-center h-screen bg-white dark:bg-zinc-950'>
+            <SignIn />
+        </div>
+    )
 
     if (loading) return (
         <div className='flex items-center justify-center h-screen bg-white dark:bg-zinc-950'>
