@@ -5,7 +5,7 @@ import {clerkMiddleware} from '@clerk/express'
 import { serve } from 'inngest/express'
 import { inngest, functions } from './inngest/index.js'
 
-export const app = express();
+const app = express();
 app.use(express.json())
 app.use(cors())
 app.use(clerkMiddleware())
@@ -15,4 +15,9 @@ app.use('/api/inngest', serve({ client: inngest, functions }))
 
 const PORT = process.env.PORT || 5000
 
-app.listen(PORT , ()=> console.log('server is ruuning in port'))
+// Vercel runs the default export itself, so only open a port when running locally
+if (!process.env.VERCEL) {
+    app.listen(PORT , ()=> console.log('server is ruuning in port'))
+}
+
+export default app
