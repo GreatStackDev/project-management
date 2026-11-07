@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, Clock, AlertTriangle, User } from "lucide-react";
 import { useSelector } from "react-redux";
+import { useUser } from "@clerk/react";
 
 export default function TasksSummary() {
 
     const { currentWorkspace } = useSelector((state) => state.workspace);
-    const user = { id: 'user_1' }
+    const { user } = useUser();
     const [tasks, setTasks] = useState([]);
 
     // Get all tasks for all projects in current workspace
@@ -15,7 +16,7 @@ export default function TasksSummary() {
         }
     }, [currentWorkspace]);
 
-    const myTasks = tasks.filter(i => i.assigneeId === user.id);
+    const myTasks = tasks.filter(i => i.assigneeId === user?.id);
     const overdueTasks = tasks.filter(t => t.due_date && new Date(t.due_date) < new Date() && t.status !== 'DONE');
     const inProgressIssues = tasks.filter(i => i.status === 'IN_PROGRESS');
 
