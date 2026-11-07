@@ -6,6 +6,7 @@ import { serve } from 'inngest/express'
 import { inngest } from './shared/inngest/client.js'
 import { functions } from './modules/index.js'
 import { router as workspacesRouter } from './modules/workspaces/index.js'
+import { router as projectsRouter } from './modules/projects/index.js'
 import { errorHandler } from './shared/middleware/error-handler.js'
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(clerkMiddleware())
 app.get('/' , (req,res)=> res.send('server is live'));
 app.use('/api/inngest', serve({ client: inngest, functions }))
 app.use('/api/workspaces', workspacesRouter)
+app.use('/api/projects', projectsRouter)
 
 // Must come after every route so it catches their errors
 app.use(errorHandler)

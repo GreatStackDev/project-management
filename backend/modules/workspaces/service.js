@@ -71,3 +71,10 @@ export const listWorkspacesForUser = (userId) =>
         include: workspaceTree,
         orderBy: { createdAt: 'asc' },
     })
+
+// Lets other modules check membership without touching WorkspaceMember themselves
+export const areWorkspaceMembers = async (userIds, workspaceId) => {
+    const unique = [...new Set(userIds)]
+    const count = await prisma.workspaceMember.count({ where: { workspaceId, userId: { in: unique } } })
+    return count === unique.length
+}
