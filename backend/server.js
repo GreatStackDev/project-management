@@ -3,7 +3,8 @@ import express from 'express';
 import cors from 'cors'
 import {clerkMiddleware} from '@clerk/express'
 import { serve } from 'inngest/express'
-import { inngest, functions } from './inngest/index.js'
+import { inngest } from './shared/inngest/client.js'
+import { functions } from './modules/index.js'
 
 const app = express();
 app.use(express.json())
