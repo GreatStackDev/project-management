@@ -58,6 +58,14 @@ const workspaceSlice = createSlice({
                 w.id === state.currentWorkspace.id ? { ...w, projects: w.projects.concat(action.payload) } : w
             );
         },
+        // Saving settings and adding a member both return the full project, so one reducer covers both
+        updateProject: (state, action) => {
+            const replace = (projects) => projects.map((p) => (p.id === action.payload.id ? action.payload : p));
+            state.currentWorkspace.projects = replace(state.currentWorkspace.projects);
+            state.workspaces = state.workspaces.map((w) =>
+                w.id === state.currentWorkspace.id ? { ...w, projects: replace(w.projects) } : w
+            );
+        },
         addTask: (state, action) => {
 
             state.currentWorkspace.projects = state.currentWorkspace.projects.map((p) => {
@@ -138,5 +146,5 @@ const workspaceSlice = createSlice({
     }
 });
 
-export const { setWorkspaces, setCurrentWorkspace, addWorkspace, updateWorkspace, deleteWorkspace, addProject, addTask, updateTask, deleteTask } = workspaceSlice.actions;
+export const { setWorkspaces, setCurrentWorkspace, addWorkspace, updateWorkspace, deleteWorkspace, addProject, updateProject, addTask, updateTask, deleteTask } = workspaceSlice.actions;
 export default workspaceSlice.reducer;
