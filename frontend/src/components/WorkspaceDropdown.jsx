@@ -3,6 +3,7 @@ import { ChevronDown, Check, Plus } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentWorkspace } from "../features/workspaceSlice";
 import { useNavigate } from "react-router-dom";
+import { useClerk } from "@clerk/react";
 import { dummyWorkspaces } from "../assets/assets";
 
 function WorkspaceDropdown() {
@@ -14,11 +15,18 @@ function WorkspaceDropdown() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { openCreateOrganization } = useClerk();
 
     const onSelectWorkspace = (organizationId) => {
         dispatch(setCurrentWorkspace(organizationId))
         setIsOpen(false);
         navigate('/')
+    }
+
+    // Workspaces are Clerk Organizations; the webhook sync saves the new one to our database
+    const onCreateWorkspace = () => {
+        setIsOpen(false);
+        openCreateOrganization({ afterCreateOrganizationUrl: '/' });
     }
 
     // Close dropdown on outside click
@@ -75,11 +83,11 @@ function WorkspaceDropdown() {
 
                     <hr className="border-gray-200 dark:border-zinc-700" />
 
-                    <div className="p-2 cursor-pointer rounded group hover:bg-gray-100 dark:hover:bg-zinc-800" >
-                        <p className="flex items-center text-xs gap-2 my-1 w-full text-blue-600 dark:text-blue-400 group-hover:text-blue-500 dark:group-hover:text-blue-300">
+                    <button type="button" onClick={onCreateWorkspace} className="w-full p-2 text-left cursor-pointer rounded group hover:bg-gray-100 dark:hover:bg-zinc-800" >
+                        <span className="flex items-center text-xs gap-2 my-1 w-full text-blue-600 dark:text-blue-400 group-hover:text-blue-500 dark:group-hover:text-blue-300">
                             <Plus className="w-4 h-4" /> Create Workspace
-                        </p>
-                    </div>
+                        </span>
+                    </button>
                 </div>
             )}
         </div>
