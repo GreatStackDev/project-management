@@ -126,7 +126,7 @@ export default function ProjectDetail() {
                     )}
                     {activeTab === "settings" && (
                         <div className=" dark:bg-zinc-900/40 rounded max-w-6xl">
-                            <ProjectSettings project={project} />
+                            <ProjectSettings key={project.id} project={project} />
                         </div>
                     )}
                 </div>
