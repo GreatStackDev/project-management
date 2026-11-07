@@ -1,3 +1,4 @@
+import { clerkClient } from '@clerk/express'
 import { prisma } from '../../shared/db/prisma.js'
 
 // Clerk sends a list of emails; the primary one is matched by id, there is no plain `email` field
@@ -21,3 +22,13 @@ export const upsertUser = (data) => {
 
 // deleteMany doesn't throw when the user was never saved, so Inngest won't retry for nothing
 export const deleteUser = (id) => prisma.user.deleteMany({ where: { id } })
+
+// The row can be missing: accounts made before the webhook existed never got a user.created event
+export const ensureUser = async (id) => {
+    const existing = await prisma.user.findUnique({ where: { id }, select: { id: true } })
+    if (existing) return
+
+    const user = await clerkClient.users.getUser(id)
+    // .raw is the same JSON shape as the webhook payload, so the same mapping applies
+    await upsertUser(user.raw)
+}
