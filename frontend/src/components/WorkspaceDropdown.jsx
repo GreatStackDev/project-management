@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentWorkspace } from "../features/workspaceSlice";
 import { useNavigate } from "react-router-dom";
 import { useClerk } from "@clerk/react";
-import { dummyWorkspaces } from "../assets/assets";
+import { assets } from "../assets/assets";
 
 function WorkspaceDropdown() {
 
@@ -15,9 +15,11 @@ function WorkspaceDropdown() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { openCreateOrganization } = useClerk();
+    const { openCreateOrganization, setActive } = useClerk();
 
-    const onSelectWorkspace = (organizationId) => {
+    // Clerk's active organization is what the backend reads from the token, so it must switch too
+    const onSelectWorkspace = async (organizationId) => {
+        await setActive({ organization: organizationId })
         dispatch(setCurrentWorkspace(organizationId))
         setIsOpen(false);
         navigate('/')
@@ -44,7 +46,7 @@ function WorkspaceDropdown() {
         <div className="relative m-4" ref={dropdownRef}>
             <button onClick={() => setIsOpen(prev => !prev)} className="w-full flex items-center justify-between p-3 h-auto text-left rounded hover:bg-gray-100 dark:hover:bg-zinc-800" >
                 <div className="flex items-center gap-3">
-                    <img src={currentWorkspace?.image_url} alt={currentWorkspace?.name} className="w-8 h-8 rounded shadow" />
+                    <img src={currentWorkspace?.image_url || assets.workspace_img_default} alt="" className="w-8 h-8 rounded shadow" />
                     <div className="min-w-0 flex-1">
                         <p className="font-semibold text-gray-800 dark:text-white text-sm truncate">
                             {currentWorkspace?.name || "Select Workspace"}
@@ -63,21 +65,21 @@ function WorkspaceDropdown() {
                         <p className="text-xs text-gray-500 dark:text-zinc-400 uppercase tracking-wider mb-2 px-2">
                             Workspaces
                         </p>
-                        {dummyWorkspaces.map((ws) => (
-                            <div key={ws.id} onClick={() => onSelectWorkspace(ws.id)} className="flex items-center gap-3 p-2 cursor-pointer rounded hover:bg-gray-100 dark:hover:bg-zinc-800" >
-                                <img src={ws.image_url} alt={ws.name} className="w-6 h-6 rounded" />
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-gray-800 dark:text-white truncate">
+                        {workspaces.map((ws) => (
+                            <button type="button" key={ws.id} onClick={() => onSelectWorkspace(ws.id)} className="w-full flex items-center gap-3 p-2 text-left cursor-pointer rounded hover:bg-gray-100 dark:hover:bg-zinc-800" >
+                                <img src={ws.image_url || assets.workspace_img_default} alt="" className="w-6 h-6 rounded" />
+                                <span className="block flex-1 min-w-0">
+                                    <span className="block text-sm font-medium text-gray-800 dark:text-white truncate">
                                         {ws.name}
-                                    </p>
-                                    <p className="text-xs text-gray-500 dark:text-zinc-400 truncate">
-                                        {ws.membersCount || 0} members
-                                    </p>
-                                </div>
+                                    </span>
+                                    <span className="block text-xs text-gray-500 dark:text-zinc-400 truncate">
+                                        {ws.members.length} member{ws.members.length !== 1 ? "s" : ""}
+                                    </span>
+                                </span>
                                 {currentWorkspace?.id === ws.id && (
                                     <Check className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
                                 )}
-                            </div>
+                            </button>
                         ))}
                     </div>
 

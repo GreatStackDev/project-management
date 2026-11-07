@@ -1,10 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { dummyWorkspaces } from "../assets/assets";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { api } from "../lib/api";
+
+// The argument is Clerk's active organization id, used to pick which workspace is current
+export const fetchWorkspaces = createAsyncThunk("workspace/fetchWorkspaces", async (activeOrgId, { rejectWithValue }) => {
+    try {
+        const { data } = await api.get("/api/workspaces");
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data?.message || error.message);
+    }
+});
 
 const initialState = {
-    workspaces: dummyWorkspaces || [],
-    currentWorkspace: dummyWorkspaces[1],
-    loading: false,
+    workspaces: [],
+    currentWorkspace: null,
+    // Starts true so the first render shows the spinner, not a flash of "no workspaces"
+    loading: true,
+    error: null,
 };
 
 const workspaceSlice = createSlice({
@@ -14,9 +26,9 @@ const workspaceSlice = createSlice({
         setWorkspaces: (state, action) => {
             state.workspaces = action.payload;
         },
+        // No localStorage: Clerk already remembers the active organization, and one source of truth can't disagree with itself
         setCurrentWorkspace: (state, action) => {
-            localStorage.setItem("currentWorkspaceId", action.payload);
-            state.currentWorkspace = state.workspaces.find((w) => w.id === action.payload);
+            state.currentWorkspace = state.workspaces.find((w) => w.id === action.payload) || null;
         },
         addWorkspace: (state, action) => {
             state.workspaces.push(action.payload);
@@ -37,7 +49,7 @@ const workspaceSlice = createSlice({
             }
         },
         deleteWorkspace: (state, action) => {
-            state.workspaces = state.workspaces.filter((w) => w._id !== action.payload);
+            state.workspaces = state.workspaces.filter((w) => w.id !== action.payload);
         },
         addProject: (state, action) => {
             state.currentWorkspace.projects.push(action.payload);
@@ -103,6 +115,26 @@ const workspaceSlice = createSlice({
             );
         }
 
+    },
+    extraReducers: (builder) => {
+        // No `pending` case: refetches keep showing the current data instead of blanking the app with a spinner
+        builder
+            .addCase(fetchWorkspaces.fulfilled, (state, action) => {
+                const workspaces = action.payload;
+                const activeOrgId = action.meta.arg;
+                state.workspaces = workspaces;
+                state.currentWorkspace =
+                    workspaces.find((w) => w.id === activeOrgId) ||
+                    workspaces.find((w) => w.id === state.currentWorkspace?.id) ||
+                    workspaces[0] ||
+                    null;
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(fetchWorkspaces.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            });
     }
 });
 
