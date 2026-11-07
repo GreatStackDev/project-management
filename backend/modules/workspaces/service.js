@@ -51,3 +51,23 @@ export const deleteMember = (membership) =>
     prisma.workspaceMember.deleteMany({
         where: { userId: membership.public_user_data.user_id, workspaceId: membership.organization.id },
     })
+
+// Same nested shape the frontend's fake data used, so pages can read currentWorkspace.projects[].tasks[] unchanged
+const workspaceTree = {
+    owner: true,
+    members: { include: { user: true } },
+    projects: {
+        include: {
+            tasks: { include: { assignee: true } },
+            members: { include: { user: true } },
+        },
+    },
+}
+
+// Filtered by the userId from the verified token, so a user can never see a workspace they don't belong to
+export const listWorkspacesForUser = (userId) =>
+    prisma.workspace.findMany({
+        where: { members: { some: { userId } } },
+        include: workspaceTree,
+        orderBy: { createdAt: 'asc' },
+    })
