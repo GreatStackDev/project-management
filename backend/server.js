@@ -8,6 +8,7 @@ import { functions } from './modules/index.js'
 import { router as workspacesRouter } from './modules/workspaces/index.js'
 import { router as projectsRouter } from './modules/projects/index.js'
 import { router as tasksRouter } from './modules/tasks/index.js'
+import { router as commentsRouter } from './modules/comments/index.js'
 import { errorHandler } from './shared/middleware/error-handler.js'
 
 const app = express();
@@ -20,6 +21,8 @@ app.get('/' , (req,res)=> res.send('server is live'));
 app.use('/api/inngest', serve({ client: inngest, functions }))
 app.use('/api/workspaces', workspacesRouter)
 app.use('/api/projects', projectsRouter)
+// Comments live under a task's URL but belong to the comments module
+app.use('/api/tasks/:taskId/comments', commentsRouter)
 app.use('/api/tasks', tasksRouter)
 
 // Must come after every route so it catches their errors

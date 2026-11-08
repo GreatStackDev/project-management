@@ -15,6 +15,14 @@ export const createTask = async (auth, input) => {
     return prisma.task.create({ data: input, include: withAssignee })
 }
 
+// Lets other modules check that a task is in the caller's workspace without querying Task themselves
+export const findTaskInWorkspace = async (auth, taskId) => {
+    const workspaceId = activeWorkspaceId(auth)
+    const task = await prisma.task.findFirst({ where: { id: taskId, project: { workspaceId } }, select: { id: true } })
+    if (!task) throw new HttpError(404, 'Task not found')
+    return task
+}
+
 export const updateTaskStatus = async (auth, taskId, { status }) => {
     const workspaceId = activeWorkspaceId(auth)
     // Scoped to the active workspace, so another workspace's task is a 404 and its existence isn't confirmed
