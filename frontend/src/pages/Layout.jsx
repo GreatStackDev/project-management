@@ -10,6 +10,7 @@ import { setTokenGetter } from '../lib/api'
 import { Loader2Icon, Plus } from 'lucide-react'
 import { useUser, useAuth, useClerk, useOrganization, SignIn } from '@clerk/react'
 import { MyInvitations } from '../components/MyInvitations'
+import { clerkErrorMessage } from '../lib/clerk-error'
 
 // A new workspace reaches our database through the webhook a moment after Clerk activates it
 const RETRY_DELAY_MS = 1500
@@ -54,8 +55,9 @@ const Layout = () => {
                 if (isMissing && attempt < MAX_ATTEMPTS && !cancelled) {
                     timer = setTimeout(() => load(attempt + 1), RETRY_DELAY_MS)
                 }
-            } catch (message) {
-                toast.error(message)
+            } catch (error) {
+                // unwrap() rejects with our API's message string, but setActive throws a Clerk error object
+                toast.error(typeof error === 'string' ? error : clerkErrorMessage(error))
             }
         }
         load(1)
