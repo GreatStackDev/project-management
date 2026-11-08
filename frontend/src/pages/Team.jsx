@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
 import { UsersIcon, Search, UserPlus, Shield, Activity } from "lucide-react";
 import InviteMemberDialog from "../components/InviteMemberDialog";
+import { SentInvitations } from "../components/SentInvitations";
 import { useSelector } from "react-redux";
+import { useOrganization } from "@clerk/react";
+
+const PENDING_INVITATIONS = { status: ["pending"] };
 
 const Team = () => {
+    // Clerk only lets admins invite, so the button is hidden for everyone else
+    const { membership } = useOrganization();
+    const isAdmin = membership?.role === "org:admin";
+    // Opt-in fetch: members never request the invitation list Clerk wouldn't show them anyway
+    const { invitations } = useOrganization({ invitations: isAdmin ? PENDING_INVITATIONS : undefined });
 
     const [tasks, setTasks] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
@@ -33,10 +42,14 @@ const Team = () => {
                         Manage team members and their contributions
                     </p>
                 </div>
-                <button onClick={() => setIsDialogOpen(true)} className="flex items-center px-5 py-2 rounded text-sm bg-gradient-to-br from-blue-500 to-blue-600 hover:opacity-90 text-white transition" >
-                    <UserPlus className="w-4 h-4 mr-2" /> Invite Member
-                </button>
-                <InviteMemberDialog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+                {isAdmin && (
+                    <>
+                        <button type="button" onClick={() => setIsDialogOpen(true)} className="flex items-center px-5 py-2 rounded text-sm bg-gradient-to-br from-blue-500 to-blue-600 hover:opacity-90 text-white transition" >
+                            <UserPlus className="w-4 h-4 mr-2" /> Invite Member
+                        </button>
+                        <InviteMemberDialog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} onInvited={invitations?.revalidate} />
+                    </>
+                )}
             </div>
 
             {/* Stats Cards */}
@@ -82,6 +95,8 @@ const Team = () => {
                     </div>
                 </div>
             </div>
+
+            {isAdmin && <SentInvitations invitations={invitations} />}
 
             {/* Search */}
             <div className="relative max-w-md">
