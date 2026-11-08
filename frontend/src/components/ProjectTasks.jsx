@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../lib/api";
 import { deleteTask, updateTask } from "../features/workspaceSlice";
 import { Bug, CalendarIcon, GitCommit, MessageSquare, Square, Trash, XIcon, Zap } from "lucide-react";
 
@@ -54,42 +55,38 @@ const ProjectTasks = ({ tasks }) => {
         setFilters((prev) => ({ ...prev, [name]: value }));
     };
 
+    // Select-all works on the rows you can see, so it never picks tasks hidden by a filter
+    const visibleIds = filteredTasks.map((t) => t.id);
+    const allVisibleSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedTasks.includes(id));
+    const toggleSelectAll = () =>
+        setSelectedTasks((prev) =>
+            allVisibleSelected ? prev.filter((id) => !visibleIds.includes(id)) : [...new Set([...prev, ...visibleIds])]
+        );
+
     const handleStatusChange = async (taskId, newStatus) => {
+        const toastId = toast.loading("Updating status...");
         try {
-            toast.loading("Updating status...");
-
-            //  Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-
-            let updatedTask = structuredClone(tasks.find((t) => t.id === taskId));
-            updatedTask.status = newStatus;
-            dispatch(updateTask(updatedTask));
-
-            toast.dismissAll();
-            toast.success("Task status updated successfully");
+            const { data } = await api.put(`/api/tasks/${taskId}`, { status: newStatus });
+            dispatch(updateTask(data));
+            toast.success("Task status updated", { id: toastId });
         } catch (error) {
-            toast.dismissAll();
-            toast.error(error?.response?.data?.message || error.message);
+            toast.error(error?.response?.data?.message || error.message, { id: toastId });
         }
     };
 
     const handleDelete = async () => {
+        const confirm = window.confirm("Are you sure you want to delete the selected tasks?");
+        if (!confirm) return;
+
+        const toastId = toast.loading("Deleting tasks...");
         try {
-            const confirm = window.confirm("Are you sure you want to delete the selected tasks?");
-            if (!confirm) return;
-
-            toast.loading("Deleting tasks...");
-
-            //  Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-
+            // axios sends a DELETE body only through the `data` option
+            await api.delete("/api/tasks", { data: { ids: selectedTasks } });
             dispatch(deleteTask(selectedTasks));
-
-            toast.dismissAll();
-            toast.success("Tasks deleted successfully");
+            setSelectedTasks([]);
+            toast.success("Tasks deleted", { id: toastId });
         } catch (error) {
-            toast.dismissAll();
-            toast.error(error?.response?.data?.message || error.message);
+            toast.error(error?.response?.data?.message || error.message, { id: toastId });
         }
     };
 
@@ -125,7 +122,7 @@ const ProjectTasks = ({ tasks }) => {
                         ],
                     };
                     return (
-                        <select key={name} name={name} onChange={handleFilterChange} className=" border not-dark:bg-white border-zinc-300 dark:border-zinc-800 outline-none px-3 py-1 rounded text-sm text-zinc-900 dark:text-zinc-200" >
+                        <select key={name} name={name} aria-label={`Filter by ${name}`} value={filters[name]} onChange={handleFilterChange} className=" border not-dark:bg-white border-zinc-300 dark:border-zinc-800 outline-none px-3 py-1 rounded text-sm text-zinc-900 dark:text-zinc-200" >
                             {options[name].map((opt, idx) => (
                                 <option key={idx} value={opt.value}>{opt.label}</option>
                             ))}
@@ -156,7 +153,7 @@ const ProjectTasks = ({ tasks }) => {
                             <thead className="text-xs uppercase dark:bg-zinc-800/70 text-zinc-500 dark:text-zinc-400 ">
                                 <tr>
                                     <th className="pl-2 pr-1">
-                                        <input onChange={() => selectedTasks.length > 1 ? setSelectedTasks([]) : setSelectedTasks(tasks.map((t) => t.id))} checked={selectedTasks.length === tasks.length} type="checkbox" className="size-3 accent-zinc-600 dark:accent-zinc-500" />
+                                        <input onChange={toggleSelectAll} checked={allVisibleSelected} aria-label="Select all visible tasks" type="checkbox" className="size-3 accent-zinc-600 dark:accent-zinc-500" />
                                     </th>
                                     <th className="px-4 pl-0 py-3">Title</th>
                                     <th className="px-4 py-3">Type</th>

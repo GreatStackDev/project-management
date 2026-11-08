@@ -105,20 +105,13 @@ const workspaceSlice = createSlice({
                 } : w
             );
         },
+        // The payload is an array of task ids that can span projects, so every project is filtered
         deleteTask: (state, action) => {
-            state.currentWorkspace.projects.map((p) => {
-                p.tasks = p.tasks.filter((t) => !action.payload.includes(t.id));
-                return p;
-            });
-            // find workspace and project by id and delete task from it
+            const removeIds = (projects) =>
+                projects.map((p) => ({ ...p, tasks: p.tasks.filter((t) => !action.payload.includes(t.id)) }));
+            state.currentWorkspace.projects = removeIds(state.currentWorkspace.projects);
             state.workspaces = state.workspaces.map((w) =>
-                w.id === state.currentWorkspace.id ? {
-                    ...w, projects: w.projects.map((p) =>
-                        p.id === action.payload.projectId ? {
-                            ...p, tasks: p.tasks.filter((t) => !action.payload.includes(t.id))
-                        } : p
-                    )
-                } : w
+                w.id === state.currentWorkspace.id ? { ...w, projects: removeIds(w.projects) } : w
             );
         }
 
