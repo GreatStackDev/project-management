@@ -5,6 +5,7 @@ import { setCurrentWorkspace } from "../features/workspaceSlice";
 import { useNavigate } from "react-router-dom";
 import { useClerk } from "@clerk/react";
 import { assets } from "../assets/assets";
+import { MyInvitations } from "./MyInvitations";
 
 function WorkspaceDropdown() {
 
@@ -61,6 +62,7 @@ function WorkspaceDropdown() {
 
             {isOpen && (
                 <div className="absolute z-50 w-64 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded shadow-lg top-full left-0">
+                    <MyInvitations className="p-2 border-b border-gray-200 dark:border-zinc-700" />
                     <div className="p-2">
                         <p className="text-xs text-gray-500 dark:text-zinc-400 uppercase tracking-wider mb-2 px-2">
                             Workspaces

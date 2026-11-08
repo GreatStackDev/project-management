@@ -9,6 +9,7 @@ import { fetchWorkspaces } from '../features/workspaceSlice'
 import { setTokenGetter } from '../lib/api'
 import { Loader2Icon, Plus } from 'lucide-react'
 import { useUser, useAuth, useClerk, useOrganization, SignIn } from '@clerk/react'
+import { MyInvitations } from '../components/MyInvitations'
 
 // A new workspace reaches our database through the webhook a moment after Clerk activates it
 const RETRY_DELAY_MS = 1500
@@ -20,7 +21,7 @@ const Layout = () => {
     const dispatch = useDispatch()
     const { user, isLoaded } = useUser()
     const { getToken } = useAuth()
-    const { openCreateOrganization } = useClerk()
+    const { openCreateOrganization, setActive } = useClerk()
     const { organization } = useOrganization()
     const userId = user?.id
     const activeOrgId = organization?.id
@@ -43,6 +44,12 @@ const Layout = () => {
         const load = async (attempt) => {
             try {
                 const list = await dispatch(fetchWorkspaces(activeOrgId)).unwrap()
+                // The page falls back to the first workspace, but the backend reads the workspace from the token,
+                // so Clerk must make it active too or every save fails; this effect then re-runs with its id
+                if (!activeOrgId && list.length > 0 && !cancelled) {
+                    await setActive({ organization: list[0].id })
+                    return
+                }
                 const isMissing = activeOrgId && !list.some((w) => w.id === activeOrgId)
                 if (isMissing && attempt < MAX_ATTEMPTS && !cancelled) {
                     timer = setTimeout(() => load(attempt + 1), RETRY_DELAY_MS)
@@ -56,7 +63,7 @@ const Layout = () => {
             cancelled = true
             clearTimeout(timer)
         }
-    }, [userId, activeOrgId, dispatch])
+    }, [userId, activeOrgId, dispatch, setActive])
 
     // Wait for Clerk to resolve the session so signed-in users don't flash the sign-in form
     if (!isLoaded) return (
@@ -91,7 +98,9 @@ const Layout = () => {
     if (workspaces.length === 0) return (
         <main className='flex flex-col items-center justify-center gap-4 h-screen p-6 text-center bg-white dark:bg-zinc-950 text-gray-900 dark:text-slate-100'>
             <h1 className='text-xl font-semibold'>No workspace yet</h1>
-            <p className='text-sm text-gray-500 dark:text-zinc-400'>Create one to start adding projects and tasks.</p>
+            <p className='text-sm text-gray-500 dark:text-zinc-400'>Create one, or join one you've been invited to.</p>
+            {/* A newly invited person lands here, with no sidebar, so this is where they can accept */}
+            <MyInvitations className='w-full max-w-xs rounded border border-gray-200 dark:border-zinc-800 p-2' />
             <button type="button" onClick={() => openCreateOrganization({ afterCreateOrganizationUrl: '/' })} className='flex items-center gap-2 px-4 py-2 rounded text-sm text-white bg-gradient-to-br from-blue-500 to-blue-600 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500'>
                 <Plus className='size-4' /> Create Workspace
             </button>
