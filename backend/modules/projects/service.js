@@ -1,19 +1,12 @@
 import { prisma } from '../../shared/db/prisma.js'
 import { HttpError } from '../../shared/http-error.js'
+import { ADMIN, activeWorkspaceId } from '../../shared/active-workspace.js'
 import { areWorkspaceMembers } from '../workspaces/index.js'
-
-const ADMIN = 'org:admin'
 
 // Same nested shape GET /api/workspaces returns per project, so the frontend can drop it straight into Redux
 const projectTree = {
     tasks: { include: { assignee: true } },
     members: { include: { user: true } },
-}
-
-// The workspace always comes from the verified token, never from the request body
-const activeWorkspaceId = (auth) => {
-    if (!auth.orgId) throw new HttpError(400, 'Select a workspace first')
-    return auth.orgId
 }
 
 const assertWorkspaceMembers = async (userIds, workspaceId) => {
@@ -39,7 +32,7 @@ export const createProject = async (auth, input) => {
 
 // Looks only inside the caller's active workspace, so another workspace's project is a 404, not a 403:
 // a 403 would confirm that the project exists
-const findManageableProject = async (auth, projectId) => {
+export const findManageableProject = async (auth, projectId) => {
     const workspaceId = activeWorkspaceId(auth)
     const project = await prisma.project.findFirst({
         where: { id: projectId, workspaceId },
@@ -56,6 +49,10 @@ export const updateProject = async (auth, projectId, input) => {
     await findManageableProject(auth, projectId)
     return prisma.project.update({ where: { id: projectId }, data: input, include: projectTree })
 }
+
+// Lets other modules check project membership without touching ProjectMember themselves
+export const isProjectMember = async (userId, projectId) =>
+    (await prisma.projectMember.count({ where: { userId, projectId } })) > 0
 
 export const addProjectMember = async (auth, projectId, { userId }) => {
     const project = await findManageableProject(auth, projectId)
