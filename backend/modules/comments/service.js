@@ -28,15 +28,21 @@ const findRecipients = async (task, authorId) => {
     return [...people.values()].map(({ email, name }) => ({ email, name }))
 }
 
-// Checked before saving, so the new comment doesn't count against itself
-const commentedRecently = async (taskId, userId) =>
-    (await prisma.comment.count({
-        where: { taskId, userId, createdAt: { gte: new Date(Date.now() - QUIET_PERIOD_MS) } },
-    })) > 0
+// A follow-up = the task's latest comment is the same author's, from the last few minutes. Checking only the
+// latest one (not "any recent comment by them") means a reply after someone else always sends an email.
+// Runs before saving, so the new comment doesn't count against itself.
+const isFollowUp = async (taskId, userId) => {
+    const last = await prisma.comment.findFirst({
+        where: { taskId },
+        orderBy: { createdAt: 'desc' },
+        select: { userId: true, createdAt: true },
+    })
+    return last?.userId === userId && last.createdAt > new Date(Date.now() - QUIET_PERIOD_MS)
+}
 
 export const createComment = async (auth, taskId, { content }) => {
     const task = await findTaskInWorkspace(auth, taskId)
-    const skipEmail = await commentedRecently(taskId, auth.userId)
+    const skipEmail = await isFollowUp(taskId, auth.userId)
     const comment = await prisma.comment.create({ data: { content, taskId, userId: auth.userId }, include: withAuthor })
 
     if (!skipEmail) {
