@@ -6,9 +6,13 @@ import { deleteTask, updateTask } from "../features/workspaceSlice";
 import { Trash, XIcon } from "lucide-react";
 import { TaskRow } from "./TaskRow";
 import { TaskCard } from "./TaskCard";
+import { usePermissions } from "../hooks/use-permissions";
 
-const ProjectTasks = ({ tasks }) => {
+const ProjectTasks = ({ tasks, project }) => {
     const dispatch = useDispatch();
+    const { canManageProject, canChangeStatus } = usePermissions();
+    // Selection only exists to delete, so it's offered only to those who can delete
+    const canManage = canManageProject(project);
     const [selectedTasks, setSelectedTasks] = useState([]);
 
     const [filters, setFilters] = useState({
@@ -79,7 +83,9 @@ const ProjectTasks = ({ tasks }) => {
 
     const itemProps = (task) => ({
         task,
+        selectable: canManage,
         selected: selectedTasks.includes(task.id),
+        canEditStatus: canChangeStatus(task, project),
         onToggleSelect: toggleSelect,
         onStatusChange: handleStatusChange,
     });
@@ -131,7 +137,7 @@ const ProjectTasks = ({ tasks }) => {
                     </button>
                 )}
 
-                {selectedTasks.length > 0 && (
+                {canManage && selectedTasks.length > 0 && (
                     <button type="button" onClick={handleDelete} className="px-3 py-1 flex items-center gap-2 rounded bg-gradient-to-br from-indigo-400 to-indigo-500 text-zinc-100 dark:text-zinc-200 text-sm transition-colors" >
                         <Trash className="size-3" /> Delete
                     </button>
@@ -146,10 +152,12 @@ const ProjectTasks = ({ tasks }) => {
                         <table className="min-w-full text-sm text-left not-dark:bg-white text-zinc-900 dark:text-zinc-300">
                             <thead className="text-xs uppercase dark:bg-zinc-800/70 text-zinc-500 dark:text-zinc-400 ">
                                 <tr>
-                                    <th className="pl-2 pr-1">
-                                        <input onChange={toggleSelectAll} checked={allVisibleSelected} aria-label="Select all visible tasks" type="checkbox" className="size-3 accent-zinc-600 dark:accent-zinc-500" />
-                                    </th>
-                                    <th className="px-4 pl-0 py-3">Title</th>
+                                    {canManage && (
+                                        <th className="pl-2 pr-1">
+                                            <input onChange={toggleSelectAll} checked={allVisibleSelected} aria-label="Select all visible tasks" type="checkbox" className="size-3 accent-zinc-600 dark:accent-zinc-500" />
+                                        </th>
+                                    )}
+                                    <th className={`px-4 py-3 ${canManage ? "pl-0" : ""}`}>Title</th>
                                     <th className="px-4 py-3">Type</th>
                                     <th className="px-4 py-3">Priority</th>
                                     <th className="px-4 py-3">Status</th>
@@ -162,7 +170,7 @@ const ProjectTasks = ({ tasks }) => {
                                     filteredTasks.map((task) => <TaskRow key={task.id} {...itemProps(task)} />)
                                 ) : (
                                     <tr>
-                                        <td colSpan="7" className="text-center text-zinc-500 dark:text-zinc-400 py-6">
+                                        <td colSpan={canManage ? 7 : 6}className="text-center text-zinc-500 dark:text-zinc-400 py-6">
                                             No tasks found for the selected filters.
                                         </td>
                                     </tr>

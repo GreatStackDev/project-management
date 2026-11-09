@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { api } from "../lib/api";
 import { updateProject } from "../features/workspaceSlice";
 import AddProjectMember from "./AddProjectMember";
+import { usePermissions } from "../hooks/use-permissions";
 
 // The API sends ISO strings in UTC; slicing keeps the stored day instead of shifting it by the viewer's time zone
 const toDateInput = (value) => (value ? value.slice(0, 10) : "");
@@ -23,6 +24,7 @@ const toForm = (project) => ({
 export default function ProjectSettings({ project }) {
 
     const dispatch = useDispatch();
+    const canManage = usePermissions().canManageProject(project);
     // The parent keys this component by project id, so the form re-initialises when the project changes
     const [formData, setFormData] = useState(() => toForm(project));
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -54,7 +56,14 @@ export default function ProjectSettings({ project }) {
             {/* Project Details */}
             <div className={cardClasses}>
                 <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-300 mb-4">Project Details</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit}>
+                    {!canManage && (
+                        <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
+                            Only workspace admins and the team lead can edit this project.
+                        </p>
+                    )}
+                    {/* A disabled fieldset disables every control inside it, making the form read-only in one place */}
+                    <fieldset disabled={!canManage} className="space-y-4">
                     {/* Name */}
                     <div className="space-y-2">
                         <label htmlFor="settings-name" className={labelClasses}>Project Name</label>
@@ -108,10 +117,12 @@ export default function ProjectSettings({ project }) {
                         <input id="settings-progress" type="range" min="0" max="100" step="5" value={formData.progress} onChange={(e) => setFormData({ ...formData, progress: Number(e.target.value) })} className="w-full accent-blue-500 dark:accent-blue-400" />
                     </div>
 
-                    {/* Save Button */}
-                    <button type="submit" disabled={isSubmitting} className="ml-auto flex items-center text-sm justify-center gap-2 bg-gradient-to-br from-blue-500 to-blue-600 text-white px-4 py-2 rounded disabled:opacity-50" >
-                        <Save className="size-4" /> {isSubmitting ? "Saving..." : "Save Changes"}
-                    </button>
+                    {canManage && (
+                        <button type="submit" disabled={isSubmitting} className="ml-auto flex items-center text-sm justify-center gap-2 bg-gradient-to-br from-blue-500 to-blue-600 text-white px-4 py-2 rounded disabled:opacity-50" >
+                            <Save className="size-4" /> {isSubmitting ? "Saving..." : "Save Changes"}
+                        </button>
+                    )}
+                    </fieldset>
                 </form>
             </div>
 
@@ -122,10 +133,14 @@ export default function ProjectSettings({ project }) {
                         <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-300 mb-4">
                             Team Members <span className="text-sm text-zinc-600 dark:text-zinc-400">({project.members.length})</span>
                         </h2>
-                        <button type="button" aria-label="Add project member" onClick={() => setIsDialogOpen(true)} className="p-2 rounded-lg border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800" >
-                            <Plus className="size-4 text-zinc-900 dark:text-zinc-300" />
-                        </button>
-                        <AddProjectMember project={project} isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+                        {canManage && (
+                            <>
+                                <button type="button" aria-label="Add project member" onClick={() => setIsDialogOpen(true)} className="p-2 rounded-lg border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800" >
+                                    <Plus className="size-4 text-zinc-900 dark:text-zinc-300" />
+                                </button>
+                                <AddProjectMember project={project} isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+                            </>
+                        )}
                     </div>
 
                     {/* Member List */}

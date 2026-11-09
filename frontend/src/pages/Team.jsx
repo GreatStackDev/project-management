@@ -5,13 +5,13 @@ import { SentInvitations } from "../components/SentInvitations";
 import { MembersList } from "../components/MembersList";
 import { useSelector } from "react-redux";
 import { useOrganization } from "@clerk/react";
+import { usePermissions } from "../hooks/use-permissions";
 
 const PENDING_INVITATIONS = { status: ["pending"] };
 
 const Team = () => {
     // Clerk only lets admins invite, so the button is hidden for everyone else
-    const { membership } = useOrganization();
-    const isAdmin = membership?.role === "org:admin";
+    const { isAdmin } = usePermissions();
     // Opt-in fetch: members never request the invitation list Clerk wouldn't show them anyway
     const { invitations } = useOrganization({ invitations: isAdmin ? PENDING_INVITATIONS : undefined });
 

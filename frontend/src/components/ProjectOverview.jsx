@@ -4,6 +4,7 @@ import { ArrowRight, Calendar, UsersIcon, FolderOpen } from "lucide-react";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import CreateProjectDialog from "./CreateProjectDialog";
+import { usePermissions } from "../hooks/use-permissions";
 
 const ProjectOverview = () => {
     const statusColors = {
@@ -21,6 +22,7 @@ const ProjectOverview = () => {
     };
 
     const currentWorkspace = useSelector((state) => state?.workspace?.currentWorkspace || null);
+    const { isAdmin } = usePermissions();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [projects, setProjects] = useState([]);
 
@@ -44,10 +46,14 @@ const ProjectOverview = () => {
                             <FolderOpen size={32} />
                         </div>
                         <p className="text-zinc-600 dark:text-zinc-400">No projects yet</p>
-                        <button onClick={() => setIsDialogOpen(true)} className="mt-4 px-4 py-2 text-sm bg-gradient-to-br from-blue-500 to-blue-600 text-white dark:text-zinc-200 rounded hover:opacity-90 transition">
-                            Create your First Project
-                        </button>
-                        <CreateProjectDialog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+                        {isAdmin && (
+                            <>
+                                <button type="button" onClick={() => setIsDialogOpen(true)} className="mt-4 px-4 py-2 text-sm bg-gradient-to-br from-blue-500 to-blue-600 text-white dark:text-zinc-200 rounded hover:opacity-90 transition">
+                                    Create your First Project
+                                </button>
+                                <CreateProjectDialog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+                            </>
+                        )}
                     </div>
                 ) : (
                     <div className="divide-y divide-zinc-200 dark:divide-zinc-800">

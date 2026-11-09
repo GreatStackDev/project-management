@@ -7,6 +7,7 @@ import ProjectSettings from "../components/ProjectSettings";
 import CreateTaskDialog from "../components/CreateTaskDialog";
 import ProjectCalendar from "../components/ProjectCalendar";
 import ProjectTasks from "../components/ProjectTasks";
+import { usePermissions } from "../hooks/use-permissions";
 
 export default function ProjectDetail() {
 
@@ -15,7 +16,8 @@ export default function ProjectDetail() {
     const id = searchParams.get('id');
 
     const navigate = useNavigate();
-    const projects = useSelector((state) => state?.workspace?.currentWorkspace?.projects || []);
+    const { canManageProject } = usePermissions();
+    const projects =useSelector((state) => state?.workspace?.currentWorkspace?.projects || []);
 
     const [project, setProject] = useState(null);
     const [tasks, setTasks] = useState([]);
@@ -68,10 +70,12 @@ export default function ProjectDetail() {
                         </span>
                     </div>
                 </div>
-                <button onClick={() => setShowCreateTask(true)} className="flex items-center gap-2 px-5 py-2 text-sm rounded bg-gradient-to-br from-blue-500 to-blue-600 text-white" >
-                    <PlusIcon className="size-4" />
-                    New Task
-                </button>
+                {canManageProject(project) && (
+                    <button type="button" onClick={() => setShowCreateTask(true)} className="flex items-center gap-2 px-5 py-2 text-sm rounded bg-gradient-to-br from-blue-500 to-blue-600 text-white" >
+                        <PlusIcon className="size-4" />
+                        New Task
+                    </button>
+                )}
             </div>
 
             {/* Info Cards */}
@@ -111,7 +115,7 @@ export default function ProjectDetail() {
                 <div className="mt-6">
                     {activeTab === "tasks" && (
                         <div className=" dark:bg-zinc-900/40 rounded max-w-6xl">
-                            <ProjectTasks tasks={tasks} />
+                            <ProjectTasks tasks={tasks} project={project} />
                         </div>
                     )}
                     {activeTab === "analytics" && (
