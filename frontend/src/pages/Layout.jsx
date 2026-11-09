@@ -8,7 +8,7 @@ import { loadTheme } from '../features/themeSlice'
 import { fetchWorkspaces } from '../features/workspaceSlice'
 import { setTokenGetter } from '../lib/api'
 import { Loader2Icon, Plus } from 'lucide-react'
-import { useUser, useAuth, useClerk, useOrganization, SignIn } from '@clerk/react'
+import { useUser, useAuth, useClerk, useOrganization, RedirectToSignIn } from '@clerk/react'
 import { MyInvitations } from '../components/MyInvitations'
 import { clerkErrorMessage } from '../lib/clerk-error'
 
@@ -74,11 +74,9 @@ const Layout = () => {
         </div>
     )
 
-    if (!user) return (
-        <div className='flex items-center justify-center h-screen bg-white dark:bg-zinc-950'>
-            <SignIn />
-        </div>
-    )
+    // Passes the current URL as redirect_url, so a signed-out "Open task" email link returns to that task after sign-in
+    if (!user) return <RedirectToSignIn />
+
 
     if (loading) return (
         <div className='flex items-center justify-center h-screen bg-white dark:bg-zinc-950'>

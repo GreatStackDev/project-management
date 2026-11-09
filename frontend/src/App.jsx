@@ -7,12 +7,17 @@ import Team from "./pages/Team";
 import ProjectDetails from "./pages/ProjectDetails";
 import TaskDetails from "./pages/TaskDetails";
 import { NotFound } from "./pages/NotFound";
+import { SignInPage } from "./pages/SignInPage";
+import { SignUpPage } from "./pages/SignUpPage";
 
 const App = () => {
     return (
         <>
             <Toaster />
             <Routes>
+                {/* Outside Layout (the signed-in shell); splats because Clerk adds sub-steps like /sign-up/verify-email-address */}
+                <Route path="/sign-in/*" element={<SignInPage />} />
+                <Route path="/sign-up/*" element={<SignUpPage />} />
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Dashboard />} />
                     <Route path="team" element={<Team />} />
