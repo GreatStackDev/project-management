@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { UsersIcon, Search, UserPlus, Shield, Activity } from "lucide-react";
 import InviteMemberDialog from "../components/InviteMemberDialog";
 import { SentInvitations } from "../components/SentInvitations";
+import { MembersList } from "../components/MembersList";
 import { useSelector } from "react-redux";
 import { useOrganization } from "@clerk/react";
 
@@ -123,94 +124,7 @@ const Team = () => {
                         </p>
                     </div>
                 ) : (
-                    <div className="max-w-4xl w-full">
-                        {/* Desktop Table */}
-                        <div className="hidden sm:block overflow-x-auto rounded-md border border-gray-200 dark:border-zinc-800">
-                            <table className="min-w-full divide-y divide-gray-200 dark:divide-zinc-800">
-                                <thead className="bg-gray-50 dark:bg-zinc-900/50">
-                                    <tr>
-                                        <th className="px-6 py-2.5 text-left font-medium text-sm">
-                                            Name
-                                        </th>
-                                        <th className="px-6 py-2.5 text-left font-medium text-sm">
-                                            Email
-                                        </th>
-                                        <th className="px-6 py-2.5 text-left font-medium text-sm">
-                                            Role
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200 dark:divide-zinc-800">
-                                    {filteredUsers.map((user) => (
-                                        <tr
-                                            key={user.id}
-                                            className="hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors"
-                                        >
-                                            <td className="px-6 py-2.5 whitespace-nowrap flex items-center gap-3">
-                                                <img
-                                                    src={user.user.image}
-                                                    alt={user.user.name}
-                                                    className="size-7 rounded-full bg-gray-200 dark:bg-zinc-800"
-                                                />
-                                                <span className="text-sm text-zinc-800 dark:text-white truncate">
-                                                    {user.user?.name || "Unknown User"}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-2.5 whitespace-nowrap text-sm text-gray-500 dark:text-zinc-400">
-                                                {user.user.email}
-                                            </td>
-                                            <td className="px-6 py-2.5 whitespace-nowrap">
-                                                <span
-                                                    className={`px-2 py-1 text-xs rounded-md ${user.role === "ADMIN"
-                                                            ? "bg-purple-100 dark:bg-purple-500/20 text-purple-500 dark:text-purple-400"
-                                                            : "bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-zinc-300"
-                                                        }`}
-                                                >
-                                                    {user.role || "User"}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        {/* Mobile Cards */}
-                        <div className="sm:hidden space-y-3">
-                            {filteredUsers.map((user) => (
-                                <div
-                                    key={user.id}
-                                    className="p-4 border border-gray-200 dark:border-zinc-800 rounded-md bg-white dark:bg-zinc-900"
-                                >
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <img
-                                            src={user.user.image}
-                                            alt={user.user.name}
-                                            className="size-9 rounded-full bg-gray-200 dark:bg-zinc-800"
-                                        />
-                                        <div>
-                                            <p className="font-medium text-gray-900 dark:text-white">
-                                                {user.user?.name || "Unknown User"}
-                                            </p>
-                                            <p className="text-sm text-gray-500 dark:text-zinc-400">
-                                                {user.user.email}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span
-                                            className={`px-2 py-1 text-xs rounded-md ${user.role === "ADMIN"
-                                                    ? "bg-purple-100 dark:bg-purple-500/20 text-purple-500 dark:text-purple-400"
-                                                    : "bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-zinc-300"
-                                                }`}
-                                        >
-                                            {user.role || "User"}
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    <MembersList members={filteredUsers} />
                 )}
             </div>
 
