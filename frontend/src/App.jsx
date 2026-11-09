@@ -6,6 +6,7 @@ import Projects from "./pages/Projects";
 import Team from "./pages/Team";
 import ProjectDetails from "./pages/ProjectDetails";
 import TaskDetails from "./pages/TaskDetails";
+import { NotFound } from "./pages/NotFound";
 
 const App = () => {
     return (
@@ -18,6 +19,8 @@ const App = () => {
                     <Route path="projects" element={<Projects />} />
                     <Route path="projectsDetail" element={<ProjectDetails />} />
                     <Route path="taskDetails" element={<TaskDetails />} />
+                    {/* Inside Layout so the 404 keeps the sidebar and navbar */}
+                    <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
         </>

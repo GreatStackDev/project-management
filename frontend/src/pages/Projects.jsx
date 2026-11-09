@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import { Plus, Search, FolderOpen } from "lucide-react";
 import ProjectCard from "../components/ProjectCard";
 import CreateProjectDialog from "../components/CreateProjectDialog";
@@ -10,40 +11,28 @@ export default function Projects() {
         (state) => state?.workspace?.currentWorkspace?.projects || []
     );
 
-    const [filteredProjects, setFilteredProjects] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
+    // The URL owns the search term, so the navbar search can link here (and re-link while already here)
+    const [searchParams, setSearchParams] = useSearchParams();
+    const searchTerm = searchParams.get("search") ?? "";
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [filters, setFilters] = useState({
         status: "ALL",
         priority: "ALL",
     });
 
-    const filterProjects = () => {
-        let filtered = projects;
+    // replace: typing shouldn't add a history entry per keystroke
+    const setSearchTerm = (value) => setSearchParams(value ? { search: value } : {}, { replace: true });
 
-        if (searchTerm) {
-            filtered = filtered.filter(
-                (project) =>
-                    project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    project.description?.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-        }
-
-        if (filters.status !== "ALL") {
-            filtered = filtered.filter((project) => project.status === filters.status);
-        }
-
-        if (filters.priority !== "ALL") {
-            filtered = filtered.filter(
-                (project) => project.priority === filters.priority
-            );
-        }
-
-        setFilteredProjects(filtered);
-    };
-
-    useEffect(() => {
-        filterProjects();
+    const filteredProjects = useMemo(() => {
+        const term = searchTerm.toLowerCase();
+        return projects.filter(
+            (project) =>
+                (!term ||
+                    project.name.toLowerCase().includes(term) ||
+                    project.description?.toLowerCase().includes(term)) &&
+                (filters.status === "ALL" || project.status === filters.status) &&
+                (filters.priority === "ALL" || project.priority === filters.priority)
+        );
     }, [projects, searchTerm, filters]);
 
     return (
