@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { CheckSquareIcon, ChevronDownIcon, ChevronRightIcon } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -10,7 +10,18 @@ function MyTasksSidebar() {
 
     const { currentWorkspace } = useSelector((state) => state.workspace);
     const [showMyTasks, setShowMyTasks] = useState(false);
-    const [myTasks, setMyTasks] = useState([]);
+    const userId = user?.id;
+
+    // Depends on userId too: Clerk can load the user after the workspace arrives
+    const myTasks = useMemo(
+        () =>
+            userId
+                ? (currentWorkspace?.projects ?? []).flatMap((project) =>
+                      project.tasks.filter((task) => task?.assignee?.id === userId)
+                  )
+                : [],
+        [currentWorkspace, userId]
+    );
 
     const toggleMyTasks = () => setShowMyTasks(prev => !prev);
 
@@ -26,20 +37,6 @@ function MyTasksSidebar() {
                 return 'bg-gray-400 dark:bg-zinc-400';
         }
     };
-
-    const fetchUserTasks = () => {
-        const userId = user?.id || '';
-        if (!userId || !currentWorkspace) return;
-        const currentWorkspaceTasks = currentWorkspace.projects.flatMap((project) => {
-            return project.tasks.filter((task) => task?.assignee?.id === userId);
-        });
-
-        setMyTasks(currentWorkspaceTasks);
-    }
-
-    useEffect(() => {
-        fetchUserTasks()
-    }, [currentWorkspace])
 
     return (
         <div className="mt-6 px-3">
