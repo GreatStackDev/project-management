@@ -1,6 +1,7 @@
 import { prisma } from '../../shared/db/prisma.js'
 import { HttpError } from '../../shared/http-error.js'
 import { ADMIN, activeWorkspaceId } from '../../shared/active-workspace.js'
+import { inngest } from '../../shared/inngest/client.js'
 import { findManageableProject, isProjectMember } from '../projects/index.js'
 
 // Same shape GET /api/workspaces returns per task, so the frontend can drop it straight into Redux
@@ -8,11 +9,29 @@ const withAssignee = { assignee: true }
 
 export const createTask = async (auth, input) => {
     // 404 if the project is in another workspace, 403 if the caller isn't an admin or its lead
-    await findManageableProject(auth, input.projectId)
+    const project = await findManageableProject(auth, input.projectId)
     if (!(await isProjectMember(input.assigneeId, input.projectId))) {
         throw new HttpError(400, 'The assignee must be a member of this project')
     }
-    return prisma.task.create({ data: input, include: withAssignee })
+    const task = await prisma.task.create({ data: input, include: withAssignee })
+
+    // The task is already saved, so a failed send is logged rather than turned into a 500
+    try {
+        await inngest.send({
+            name: 'app/task.assigned',
+            data: {
+                taskId: task.id,
+                title: task.title,
+                dueDate: task.due_date,
+                projectName: project.name,
+                assignee: { id: task.assignee.id, email: task.assignee.email, name: task.assignee.name },
+                assignedBy: auth.userId,
+            },
+        })
+    } catch (error) {
+        console.error('Failed to send app/task.assigned', error)
+    }
+    return task
 }
 
 // Lets other modules check that a task is in the caller's workspace without querying Task themselves

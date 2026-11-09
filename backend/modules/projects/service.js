@@ -36,7 +36,7 @@ export const findManageableProject = async (auth, projectId) => {
     const workspaceId = activeWorkspaceId(auth)
     const project = await prisma.project.findFirst({
         where: { id: projectId, workspaceId },
-        select: { id: true, team_lead: true, workspaceId: true },
+        select: { id: true, name: true, team_lead: true, workspaceId: true },
     })
     if (!project) throw new HttpError(404, 'Project not found')
     if (auth.orgRole !== ADMIN && project.team_lead !== auth.userId) {
