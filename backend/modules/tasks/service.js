@@ -42,6 +42,31 @@ export const findTaskInWorkspace = async (auth, taskId) => {
     return task
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000
+
+// Due dates are stored as UTC midnight, so "tomorrow" is the exact range [tomorrow 00:00 UTC, +1 day).
+// Done and deleted tasks never match, which is why the reminder needs no cancel logic.
+export const findTasksDueTomorrow = async (now = new Date()) => {
+    const tomorrow = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)
+    const tasks = await prisma.task.findMany({
+        where: { status: { not: 'DONE' }, due_date: { gte: new Date(tomorrow), lt: new Date(tomorrow + DAY_MS) } },
+        select: {
+            id: true,
+            title: true,
+            due_date: true,
+            assignee: { select: { email: true, name: true } },
+            project: { select: { name: true } },
+        },
+    })
+    return tasks.map((task) => ({
+        taskId: task.id,
+        title: task.title,
+        dueDate: task.due_date,
+        projectName: task.project.name,
+        assignee: task.assignee,
+    }))
+}
+
 export const updateTaskStatus = async (auth, taskId, { status }) => {
     const workspaceId = activeWorkspaceId(auth)
     // Scoped to the active workspace, so another workspace's task is a 404 and its existence isn't confirmed
