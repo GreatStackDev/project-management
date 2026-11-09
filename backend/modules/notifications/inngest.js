@@ -19,11 +19,14 @@ const emailTasksDueTomorrow = inngest.createFunction(
     { id: 'email-tasks-due-tomorrow', triggers: { cron: '0 6 * * *' } },
     async ({ step }) => {
         const tasks = await step.run('find-due-tasks', () => findTasksDueTomorrow())
-        // One step per email: a failed send retries alone and never re-emails people who already got theirs
-        for (const task of tasks) {
-            await step.run(`send-email-${task.taskId}`, () => sendMail({ to: task.assignee.email, ...taskDueEmail(task) }))
-        }
-        return { sent: tasks.length }
+        // One step per email, started in parallel: each retries on its own, and allSettled means one address that
+        // keeps failing can't stop everyone else's reminder (a sequential loop would block on it, then give up)
+        const results = await Promise.allSettled(
+            tasks.map((task) =>
+                step.run(`send-email-${task.taskId}`, () => sendMail({ to: task.assignee.email, ...taskDueEmail(task) }))
+            )
+        )
+        return { sent: results.filter((r) => r.status === 'fulfilled').length, failed: results.filter((r) => r.status === 'rejected').length }
     }
 )
 
@@ -37,12 +40,15 @@ const emailCommentActivity = inngest.createFunction(
     },
     async ({ event, step }) => {
         const { recipients, ...comment } = event.data
-        for (const recipient of recipients) {
-            await step.run(`send-email-${recipient.email}`, () =>
-                sendMail({ to: recipient.email, ...commentsEmail({ recipient, ...comment }) })
+        // Parallel and settled for the same reason as the reminders: one bad address can't block the others
+        const results = await Promise.allSettled(
+            recipients.map((recipient) =>
+                step.run(`send-email-${recipient.email}`, () =>
+                    sendMail({ to: recipient.email, ...commentsEmail({ recipient, ...comment }) })
+                )
             )
-        }
-        return { sent: recipients.length }
+        )
+        return { sent: results.filter((r) => r.status === 'fulfilled').length, failed: results.filter((r) => r.status === 'rejected').length }
     }
 )
 
