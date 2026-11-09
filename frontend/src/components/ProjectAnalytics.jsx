@@ -108,15 +108,11 @@ const ProjectAnalytics = ({ project, tasks }) => {
                 {/* Tasks by Status */}
                 <div className="not-dark:bg-white dark:bg-gradient-to-br dark:from-zinc-800/70 dark:to-zinc-900/50 border border-zinc-300 dark:border-zinc-800 rounded-lg p-6">
                     <h2 className="text-zinc-900 dark:text-white mb-4 font-medium">Tasks by Status</h2>
-                    <ResponsiveContainer width="100%" height={300}>
+                    {/* Axes use currentColor, so this text colour (and its dark: variant) themes them */}
+                    <ResponsiveContainer width="100%" height={300} className="text-zinc-500 dark:text-zinc-400">
                         <BarChart data={statusData}>
-                            <XAxis
-                                dataKey="name"
-                                tick={{ fill: "#52525b", fontSize: 12 }}
-                                axisLine={{ stroke: "#d4d4d8" }}
-                                dark={{ stroke: "#27272a" }}
-                            />
-                            <YAxis tick={{ fill: "#52525b", fontSize: 12 }} axisLine={{ stroke: "#d4d4d8" }} />
+                            <XAxis dataKey="name" tick={{ fill: "currentColor", fontSize: 12 }} axisLine={{ stroke: "currentColor" }} />
+                            <YAxis tick={{ fill: "currentColor", fontSize: 12 }} axisLine={{ stroke: "currentColor" }} />
                             <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                         </BarChart>
                     </ResponsiveContainer>

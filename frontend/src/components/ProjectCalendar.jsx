@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { format, isSameDay, isBefore, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths } from "date-fns";
+import { format, getDay, isSameDay, isBefore, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths } from "date-fns";
 import { CalendarIcon, Clock, User, ChevronLeft, ChevronRight } from "lucide-react";
 
 const typeColors = {
@@ -30,11 +30,10 @@ const ProjectCalendar = ({ tasks }) => {
 
     const overdueTasks = tasks.filter((task) => task.due_date && isBefore(task.due_date, today) && task.status !== "DONE");
 
-    const daysInMonth = eachDayOfInterval({
-        start: startOfMonth(currentMonth),
-        end: endOfMonth(currentMonth),
-    });
-
+    const monthStart = startOfMonth(currentMonth);
+    const daysInMonth = eachDayOfInterval({ start: monthStart, end: endOfMonth(currentMonth) });
+    // getDay is 0 for Sunday, matching the Sun-first header, so it's exactly the number of empty cells before the 1st
+    const leadingBlanks = Array.from({ length: getDay(monthStart) }, (_, i) => `blank-${i}`);
 
     const handleMonthChange = (direction) => {
         setCurrentMonth((prev) => (direction === "next" ? addMonths(prev, 1) : subMonths(prev, 1)));
@@ -67,6 +66,9 @@ const ProjectCalendar = ({ tasks }) => {
                     </div>
 
                     <div className="grid grid-cols-7 gap-2">
+                        {leadingBlanks.map((key) => (
+                            <div key={key} aria-hidden="true" />
+                        ))}
                         {daysInMonth.map((day) => {
                             const dayTasks = getTasksForDate(day);
                             const isSelected = isSameDay(day, selectedDate);
@@ -74,7 +76,8 @@ const ProjectCalendar = ({ tasks }) => {
 
                             return (
                                 <button
-                                    key={day}
+                                    key={format(day, "yyyy-MM-dd")}
+                                    type="button"
                                     onClick={() => setSelectedDate(day)}
                                     className={`sm:h-14 rounded-md flex flex-col items-center justify-center text-sm
                                     ${isSelected ? "bg-blue-200 text-blue-900 dark:bg-blue-600 dark:text-white" : "bg-zinc-50 text-zinc-900 dark:bg-zinc-800/40 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"}
