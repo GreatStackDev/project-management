@@ -50,6 +50,8 @@ export const createComment = async (auth, taskId, { content }) => {
         if (recipients.length > 0) {
             // Awaited because Vercel may stop the function once the response is sent; it never throws
             await sendCommentEmails({
+                taskId: task.id,
+                projectId: task.projectId,
                 taskTitle: task.title,
                 authorName: comment.user.name,
                 preview: content.slice(0, PREVIEW_LENGTH),

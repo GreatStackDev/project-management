@@ -17,6 +17,8 @@ export const createTask = async (auth, input) => {
 
     // Awaited because Vercel may stop the function once the response is sent; it never throws, so the save stands
     await sendTaskAssignedEmail({
+        taskId: task.id,
+        projectId: task.projectId,
         title: task.title,
         dueDate: task.due_date,
         projectName: project.name,
@@ -31,7 +33,7 @@ export const findTaskInWorkspace = async (auth, taskId) => {
     const workspaceId = activeWorkspaceId(auth)
     const task = await prisma.task.findFirst({
         where: { id: taskId, project: { workspaceId } },
-        select: { id: true, title: true, assignee: { select: { id: true, email: true, name: true } } },
+        select: { id: true, title: true, projectId: true, assignee: { select: { id: true, email: true, name: true } } },
     })
     if (!task) throw new HttpError(404, 'Task not found')
     return task
@@ -47,6 +49,7 @@ export const findTasksDueTomorrow = async (now = new Date()) => {
         where: { status: { not: 'DONE' }, due_date: { gte: new Date(tomorrow), lt: new Date(tomorrow + DAY_MS) } },
         select: {
             id: true,
+            projectId: true,
             title: true,
             due_date: true,
             assignee: { select: { email: true, name: true } },
@@ -55,6 +58,7 @@ export const findTasksDueTomorrow = async (now = new Date()) => {
     })
     return tasks.map((task) => ({
         taskId: task.id,
+        projectId: task.projectId,
         title: task.title,
         dueDate: task.due_date,
         projectName: task.project.name,
