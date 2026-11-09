@@ -1,5 +1,5 @@
 import { FolderOpen, CheckCircle, Users, AlertTriangle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useUser } from "@clerk/react";
 
@@ -9,13 +9,19 @@ export default function StatsGrid() {
         (state) => state?.workspace?.currentWorkspace || null
     );
 
-    const [stats, setStats] = useState({
-        totalProjects: 0,
-        activeProjects: 0,
-        completedProjects: 0,
-        myTasks: 0,
-        overdueIssues: 0,
-    });
+    // Derived from Redux on every render that changes it; nothing to keep in sync with an effect
+    const stats = useMemo(() => {
+        const projects = currentWorkspace?.projects ?? [];
+        const tasks = projects.flatMap((project) => project.tasks);
+        const now = new Date();
+        return {
+            totalProjects: projects.length,
+            completedProjects: projects.filter((p) => p.status === "COMPLETED").length,
+            myTasks: tasks.filter((t) => t.assigneeId === user?.id).length,
+            // due_date arrives as an ISO string: comparing it to a Date directly is always false
+            overdueIssues: tasks.filter((t) => t.status !== "DONE" && new Date(t.due_date) < now).length,
+        };
+    }, [currentWorkspace, user?.id]);
 
     const statCards = [
         {
@@ -52,36 +58,14 @@ export default function StatsGrid() {
         },
     ];
 
-    useEffect(() => {
-        if (currentWorkspace) {
-            setStats({
-                totalProjects: currentWorkspace.projects.length,
-                activeProjects: currentWorkspace.projects.filter(
-                    (p) => p.status !== "CANCELLED" && p.status !== "COMPLETED"
-                ).length,
-                completedProjects: currentWorkspace.projects
-                    .filter((p) => p.status === "COMPLETED")
-                    .reduce((acc, project) => acc + project.tasks.length, 0),
-                myTasks: currentWorkspace.projects.reduce(
-                    (acc, project) =>
-                        acc +
-                        project.tasks.filter((t) => t.assigneeId === user?.id).length,
-                    0
-                ),
-                overdueIssues: currentWorkspace.projects.reduce(
-                    (acc, project) =>
-                        acc + project.tasks.filter((t) => t.due_date < new Date()).length,
-                    0
-                ),
-            });
-        }
-    }, [currentWorkspace, user?.id]);
-
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 my-9">
-            {statCards.map(
-                ({ icon: Icon, title, value, subtitle, bgColor, textColor }, i) => (
-                    <div key={i} className="bg-white dark:bg-zinc-950 dark:bg-gradient-to-br dark:from-zinc-800/70 dark:to-zinc-900/50 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 transition duration-200 rounded-md" >
+            {statCards.map(({ icon, title, value, subtitle, bgColor, textColor }) => {
+                // A variable, not a destructured parameter: the lint config exempts capitalised
+                // variables (varsIgnorePattern '^[A-Z_]') from no-unused-vars, but not parameters
+                const Icon = icon;
+                return (
+                    <div key={title} className="bg-white dark:bg-zinc-950 dark:bg-gradient-to-br dark:from-zinc-800/70 dark:to-zinc-900/50 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 transition duration-200 rounded-md" >
                         <div className="p-6 py-4">
                             <div className="flex items-start justify-between">
                                 <div>
@@ -103,8 +87,8 @@ export default function StatsGrid() {
                             </div>
                         </div>
                     </div>
-                )
-            )}
+                );
+            })}
         </div>
     );
 }

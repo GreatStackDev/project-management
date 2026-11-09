@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { GitCommit, MessageSquare, Clock, Bug, Zap, Square } from "lucide-react";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
@@ -17,21 +18,20 @@ const statusColors = {
     DONE: "bg-emerald-200 text-emerald-800 dark:bg-emerald-500 dark:text-emerald-900",
 };
 
+const RECENT_LIMIT = 10;
+
 const RecentActivity = () => {
-    const [tasks, setTasks] = useState([]);
     const { currentWorkspace } = useSelector((state) => state.workspace);
 
-    const getTasksFromCurrentWorkspace = () => {
-
-        if (!currentWorkspace) return;
-
-        const tasks = currentWorkspace.projects.flatMap((project) => project.tasks.map((task) => task));
-        setTasks(tasks);
-    };
-
-    useEffect(() => {
-        getTasksFromCurrentWorkspace();
-    }, [currentWorkspace]);
+    // Newest change first; ISO timestamps sort correctly as strings, so no Date parsing per comparison
+    const tasks = useMemo(
+        () =>
+            (currentWorkspace?.projects ?? [])
+                .flatMap((project) => project.tasks)
+                .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+                .slice(0, RECENT_LIMIT),
+        [currentWorkspace]
+    );
 
     return (
         <div className="bg-white dark:bg-zinc-950 dark:bg-gradient-to-br dark:from-zinc-800/70 dark:to-zinc-900/50 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 rounded-lg transition-all overflow-hidden">
@@ -54,7 +54,7 @@ const RecentActivity = () => {
                             const iconColor = typeIcons[task.type]?.color || "text-gray-500 dark:text-gray-400";
 
                             return (
-                                <div key={task.id} className="p-6 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
+                                <Link key={task.id} to={`/taskDetails?projectId=${task.projectId}&taskId=${task.id}`} className="block p-6 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 focus-visible:outline-2 focus-visible:outline-blue-500 transition-colors">
                                     <div className="flex items-start gap-4">
                                         <div className="p-2 bg-zinc-200 dark:bg-zinc-800 rounded-lg">
                                             <TypeIcon className={`w-4 h-4 ${iconColor}`} />
@@ -73,7 +73,7 @@ const RecentActivity = () => {
                                                 {task.assignee && (
                                                     <div className="flex items-center gap-1">
                                                         <div className="w-4 h-4 bg-zinc-300 dark:bg-zinc-700 rounded-full flex items-center justify-center text-[10px] text-zinc-800 dark:text-zinc-200">
-                                                            {task.assignee.name[0].toUpperCase()}
+                                                            {task.assignee.name?.[0]?.toUpperCase() ?? "?"}
                                                         </div>
                                                         {task.assignee.name}
                                                     </div>
@@ -84,7 +84,7 @@ const RecentActivity = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
                             );
                         })}
                     </div>
