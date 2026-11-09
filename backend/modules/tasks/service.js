@@ -1,8 +1,8 @@
 import { prisma } from '../../shared/db/prisma.js'
 import { HttpError } from '../../shared/http-error.js'
 import { ADMIN, activeWorkspaceId } from '../../shared/active-workspace.js'
-import { inngest } from '../../shared/inngest/client.js'
 import { findManageableProject, isProjectMember } from '../projects/index.js'
+import { sendTaskAssignedEmail } from '../notifications/index.js'
 
 // Same shape GET /api/workspaces returns per task, so the frontend can drop it straight into Redux
 const withAssignee = { assignee: true }
@@ -15,22 +15,14 @@ export const createTask = async (auth, input) => {
     }
     const task = await prisma.task.create({ data: input, include: withAssignee })
 
-    // The task is already saved, so a failed send is logged rather than turned into a 500
-    try {
-        await inngest.send({
-            name: 'app/task.assigned',
-            data: {
-                taskId: task.id,
-                title: task.title,
-                dueDate: task.due_date,
-                projectName: project.name,
-                assignee: { id: task.assignee.id, email: task.assignee.email, name: task.assignee.name },
-                assignedBy: auth.userId,
-            },
-        })
-    } catch (error) {
-        console.error('Failed to send app/task.assigned', error)
-    }
+    // Awaited because Vercel may stop the function once the response is sent; it never throws, so the save stands
+    await sendTaskAssignedEmail({
+        title: task.title,
+        dueDate: task.due_date,
+        projectName: project.name,
+        assignee: task.assignee,
+        assignedBy: auth.userId,
+    })
     return task
 }
 

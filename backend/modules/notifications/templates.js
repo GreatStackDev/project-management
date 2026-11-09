@@ -39,14 +39,14 @@ export const taskDueEmail = ({ assignee, title, projectName, dueDate }) => ({
     ),
 })
 
-// Debounce delivers only the latest comment, so the email previews that one and points to the task for the rest
+// The author's follow-ups within a few minutes send no email, so this points to the task for the rest
 export const commentsEmail = ({ recipient, taskTitle, authorName, preview }) => ({
-    subject: `New comments on ${taskTitle}`,
-    text: `Hi ${recipient.name},\n\nThere are new comments on "${taskTitle}". Latest from ${authorName}:\n\n"${preview}"\n\nOpen the task to read the discussion.`,
+    subject: `${authorName} commented on ${taskTitle}`,
+    text: `Hi ${recipient.name},\n\n${authorName} commented on "${taskTitle}":\n\n"${preview}"\n\nOpen the task to read the discussion.`,
     html: layout(
-        `New comments on ${escapeHtml(taskTitle)}`,
+        `New comment on ${escapeHtml(taskTitle)}`,
         `<p>Hi ${escapeHtml(recipient.name)},</p>
-  <p>There are new comments on <strong>${escapeHtml(taskTitle)}</strong>. Latest from ${escapeHtml(authorName)}:</p>
+  <p>${escapeHtml(authorName)} commented on <strong>${escapeHtml(taskTitle)}</strong>:</p>
   <blockquote style="margin:0;padding:8px 12px;border-left:3px solid #3b82f6;background:#f4f4f5">${escapeHtml(preview)}</blockquote>
   <p>Open the task to read the discussion.</p>`
     ),
