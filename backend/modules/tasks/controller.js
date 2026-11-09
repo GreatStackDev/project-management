@@ -11,3 +11,7 @@ export const updateTaskStatus = async (req, res) => {
 export const deleteTasks = async (req, res) => {
     res.json(await service.deleteTasks(req.auth, req.body))
 }
+
+export const sendDueReminders = async (req, res) => {
+    res.json(await service.sendDueTomorrowReminders())
+}

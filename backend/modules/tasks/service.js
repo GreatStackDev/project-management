@@ -2,7 +2,7 @@ import { prisma } from '../../shared/db/prisma.js'
 import { HttpError } from '../../shared/http-error.js'
 import { ADMIN, activeWorkspaceId } from '../../shared/active-workspace.js'
 import { findManageableProject, isProjectMember } from '../projects/index.js'
-import { sendTaskAssignedEmail } from '../notifications/index.js'
+import { sendTaskAssignedEmail, sendDueReminders } from '../notifications/index.js'
 
 // Same shape GET /api/workspaces returns per task, so the frontend can drop it straight into Redux
 const withAssignee = { assignee: true }
@@ -61,6 +61,10 @@ export const findTasksDueTomorrow = async (now = new Date()) => {
         assignee: task.assignee,
     }))
 }
+
+// Run daily by Vercel Cron. It lives here, not in notifications, because tasks owns the query:
+// that keeps every import pointing one way (tasks → notifications)
+export const sendDueTomorrowReminders = async () => sendDueReminders(await findTasksDueTomorrow())
 
 export const updateTaskStatus = async (auth, taskId, { status }) => {
     const workspaceId = activeWorkspaceId(auth)
