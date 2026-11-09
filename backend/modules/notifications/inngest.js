@@ -1,7 +1,7 @@
 // Listens to events from other modules and emails people; nothing here writes to the database
 import { inngest } from '../../shared/inngest/client.js'
 import { sendMail } from './mailer.js'
-import { taskAssignedEmail, taskDueEmail } from './templates.js'
+import { taskAssignedEmail, taskDueEmail, commentsEmail } from './templates.js'
 // Read-only: a cron has no event to carry the data, so it asks the module that owns tasks
 import { findTasksDueTomorrow } from '../tasks/index.js'
 
@@ -27,4 +27,23 @@ const emailTasksDueTomorrow = inngest.createFunction(
     }
 )
 
-export const functions = [emailTaskAssigned, emailTasksDueTomorrow]
+const emailCommentActivity = inngest.createFunction(
+    {
+        id: 'email-comment-activity',
+        triggers: { event: 'app/comment.created' },
+        // A burst of comments on one task becomes one email: each new comment restarts the 2-minute wait,
+        // and timeout caps it so a busy thread still emails at least every 10 minutes
+        debounce: { key: 'event.data.taskId', period: '2m', timeout: '10m' },
+    },
+    async ({ event, step }) => {
+        const { recipients, ...comment } = event.data
+        for (const recipient of recipients) {
+            await step.run(`send-email-${recipient.email}`, () =>
+                sendMail({ to: recipient.email, ...commentsEmail({ recipient, ...comment }) })
+            )
+        }
+        return { sent: recipients.length }
+    }
+)
+
+export const functions = [emailTaskAssigned, emailTasksDueTomorrow, emailCommentActivity]
