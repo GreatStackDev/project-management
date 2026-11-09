@@ -1,6 +1,6 @@
 // Listens to events from other modules and emails people; nothing here writes to the database
 import { inngest } from '../../shared/inngest/client.js'
-import { sendMail } from './mailer.js'
+import { sendEmails } from './mailer.js'
 import { taskAssignedEmail, taskDueEmail, commentsEmail } from './templates.js'
 // Read-only: a cron has no event to carry the data, so it asks the module that owns tasks
 import { findTasksDueTomorrow } from '../tasks/index.js'
@@ -11,7 +11,7 @@ const emailTaskAssigned = inngest.createFunction(
         const { assignee, assignedBy } = event.data
         // You don't need an email about a task you just gave yourself
         if (assignee.id === assignedBy) return { skipped: 'self-assigned' }
-        await step.run('send-email', () => sendMail({ to: assignee.email, ...taskAssignedEmail(event.data) }))
+        await step.run('send-email', () => sendEmails([{ to: assignee.email, ...taskAssignedEmail(event.data) }]))
     }
 )
 
@@ -23,7 +23,7 @@ const emailTasksDueTomorrow = inngest.createFunction(
         // keeps failing can't stop everyone else's reminder (a sequential loop would block on it, then give up)
         const results = await Promise.allSettled(
             tasks.map((task) =>
-                step.run(`send-email-${task.taskId}`, () => sendMail({ to: task.assignee.email, ...taskDueEmail(task) }))
+                step.run(`send-email-${task.taskId}`, () => sendEmails([{ to: task.assignee.email, ...taskDueEmail(task) }]))
             )
         )
         return { sent: results.filter((r) => r.status === 'fulfilled').length, failed: results.filter((r) => r.status === 'rejected').length }
@@ -44,7 +44,7 @@ const emailCommentActivity = inngest.createFunction(
         const results = await Promise.allSettled(
             recipients.map((recipient) =>
                 step.run(`send-email-${recipient.email}`, () =>
-                    sendMail({ to: recipient.email, ...commentsEmail({ recipient, ...comment }) })
+                    sendEmails([{ to: recipient.email, ...commentsEmail({ recipient, ...comment }) }])
                 )
             )
         )
