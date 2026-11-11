@@ -3,6 +3,7 @@ import { XIcon } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUser } from "@clerk/react";
 import toast from "react-hot-toast";
+import { Trans, useTranslation } from "react-i18next";
 import { api } from "../lib/api";
 import { addProject } from "../features/workspaceSlice";
 
@@ -22,6 +23,7 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
 
     const { currentWorkspace } = useSelector((state) => state.workspace);
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     const { user } = useUser();
     const members = currentWorkspace?.members ?? [];
     // Ids are what the database stores; emails are only for display
@@ -36,7 +38,7 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
         try {
             const { data } = await api.post("/api/projects", formData);
             dispatch(addProject(data));
-            toast.success("Project created");
+            toast.success(t("createProject.created"));
             setFormData(emptyForm(user?.id));
             setIsDialogOpen(false);
         } catch (error) {
@@ -53,51 +55,51 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
     if (!isDialogOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/20 dark:bg-black/60 backdrop-blur flex items-center justify-center text-left z-50">
+        <div className="fixed inset-0 bg-black/20 dark:bg-black/60 backdrop-blur flex items-center justify-center text-start z-50">
             <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 w-full max-w-lg text-zinc-900 dark:text-zinc-200 relative">
-                <button type="button" aria-label="Close" className="absolute top-3 right-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200" onClick={() => setIsDialogOpen(false)} >
+                <button type="button" aria-label={t("common.close")} className="absolute top-3 end-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200" onClick={() => setIsDialogOpen(false)} >
                     <XIcon className="size-5" />
                 </button>
 
-                <h2 className="text-xl font-medium mb-1">Create New Project</h2>
+                <h2 className="text-xl font-medium mb-1">{t("createProject.title")}</h2>
                 {currentWorkspace && (
                     <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
-                        In workspace: <span className="text-blue-600 dark:text-blue-400">{currentWorkspace.name}</span>
+                        <Trans i18nKey="createProject.inWorkspace" values={{ name: currentWorkspace.name }} components={{ name: <span className="text-blue-600 dark:text-blue-400" /> }} />
                     </p>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Project Name */}
                     <div>
-                        <label htmlFor="project-name" className="block text-sm mb-1">Project Name</label>
-                        <input id="project-name" type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Enter project name" className="w-full px-3 py-2 rounded dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 mt-1 text-zinc-900 dark:text-zinc-200 text-sm" required />
+                        <label htmlFor="project-name" className="block text-sm mb-1">{t("createProject.nameLabel")}</label>
+                        <input id="project-name" type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder={t("createProject.namePlaceholder")} className="w-full px-3 py-2 rounded dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 mt-1 text-zinc-900 dark:text-zinc-200 text-sm" required />
                     </div>
 
                     {/* Description */}
                     <div>
-                        <label htmlFor="project-description" className="block text-sm mb-1">Description</label>
-                        <textarea id="project-description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Describe your project" className="w-full px-3 py-2 rounded dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 mt-1 text-zinc-900 dark:text-zinc-200 text-sm h-20" />
+                        <label htmlFor="project-description" className="block text-sm mb-1">{t("createProject.descriptionLabel")}</label>
+                        <textarea id="project-description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder={t("createProject.descriptionPlaceholder")} className="w-full px-3 py-2 rounded dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 mt-1 text-zinc-900 dark:text-zinc-200 text-sm h-20" />
                     </div>
 
                     {/* Status & Priority */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label htmlFor="project-status" className="block text-sm mb-1">Status</label>
+                            <label htmlFor="project-status" className="block text-sm mb-1">{t("createProject.statusLabel")}</label>
                             <select id="project-status" value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })} className="w-full px-3 py-2 rounded dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 mt-1 text-zinc-900 dark:text-zinc-200 text-sm" >
-                                <option value="PLANNING">Planning</option>
-                                <option value="ACTIVE">Active</option>
-                                <option value="COMPLETED">Completed</option>
-                                <option value="ON_HOLD">On Hold</option>
-                                <option value="CANCELLED">Cancelled</option>
+                                <option value="PLANNING">{t("projectStatus.PLANNING")}</option>
+                                <option value="ACTIVE">{t("projectStatus.ACTIVE")}</option>
+                                <option value="COMPLETED">{t("projectStatus.COMPLETED")}</option>
+                                <option value="ON_HOLD">{t("projectStatus.ON_HOLD")}</option>
+                                <option value="CANCELLED">{t("projectStatus.CANCELLED")}</option>
                             </select>
                         </div>
 
                         <div>
-                            <label htmlFor="project-priority" className="block text-sm mb-1">Priority</label>
+                            <label htmlFor="project-priority" className="block text-sm mb-1">{t("createProject.priorityLabel")}</label>
                             <select id="project-priority" value={formData.priority} onChange={(e) => setFormData({ ...formData, priority: e.target.value })} className="w-full px-3 py-2 rounded dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 mt-1 text-zinc-900 dark:text-zinc-200 text-sm" >
-                                <option value="LOW">Low</option>
-                                <option value="MEDIUM">Medium</option>
-                                <option value="HIGH">High</option>
+                                <option value="LOW">{t("priority.LOW")}</option>
+                                <option value="MEDIUM">{t("priority.MEDIUM")}</option>
+                                <option value="HIGH">{t("priority.HIGH")}</option>
                             </select>
                         </div>
                     </div>
@@ -105,18 +107,18 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
                     {/* Dates */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label htmlFor="project-start" className="block text-sm mb-1">Start Date</label>
+                            <label htmlFor="project-start" className="block text-sm mb-1">{t("createProject.startDate")}</label>
                             <input id="project-start" type="date" value={formData.start_date} onChange={(e) => setFormData({ ...formData, start_date: e.target.value })} className="w-full px-3 py-2 rounded dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 mt-1 text-zinc-900 dark:text-zinc-200 text-sm" />
                         </div>
                         <div>
-                            <label htmlFor="project-end" className="block text-sm mb-1">End Date</label>
+                            <label htmlFor="project-end" className="block text-sm mb-1">{t("createProject.endDate")}</label>
                             <input id="project-end" type="date" value={formData.end_date} onChange={(e) => setFormData({ ...formData, end_date: e.target.value })} min={formData.start_date || undefined} className="w-full px-3 py-2 rounded dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 mt-1 text-zinc-900 dark:text-zinc-200 text-sm" />
                         </div>
                     </div>
 
                     {/* Lead */}
                     <div>
-                        <label htmlFor="project-lead" className="block text-sm mb-1">Project Lead</label>
+                        <label htmlFor="project-lead" className="block text-sm mb-1">{t("createProject.leadLabel")}</label>
                         <select id="project-lead" value={formData.team_lead} onChange={(e) => setFormData({ ...formData, team_lead: e.target.value, team_members: [...new Set([...formData.team_members, e.target.value])] })} className="w-full px-3 py-2 rounded dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 mt-1 text-zinc-900 dark:text-zinc-200 text-sm" >
                             {members.map((member) => (
                                 <option key={member.user.id} value={member.user.id}>
@@ -128,14 +130,14 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
 
                     {/* Team Members */}
                     <div>
-                        <label htmlFor="project-members" className="block text-sm mb-1">Team Members</label>
+                        <label htmlFor="project-members" className="block text-sm mb-1">{t("createProject.membersLabel")}</label>
                         <select id="project-members" value="" className="w-full px-3 py-2 rounded dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 mt-1 text-zinc-900 dark:text-zinc-200 text-sm"
                             onChange={(e) => {
                                 const userId = e.target.value;
                                 if (userId) setFormData((prev) => ({ ...prev, team_members: [...prev.team_members, userId] }));
                             }}
                         >
-                            <option value="">Add team members</option>
+                            <option value="">{t("createProject.addMembers")}</option>
                             {members
                                 .filter((member) => !formData.team_members.includes(member.user.id))
                                 .map((member) => (
@@ -152,7 +154,7 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
                                         {emailOf(userId)}
                                         {/* The lead is always on the team, so only other members can be removed */}
                                         {userId !== formData.team_lead && (
-                                            <button type="button" aria-label={`Remove ${emailOf(userId)}`} onClick={() => removeTeamMember(userId)} className="ml-1 hover:bg-blue-300/30 dark:hover:bg-blue-500/30 rounded" >
+                                            <button type="button" aria-label={t("createProject.removeMember", { email: emailOf(userId) })} onClick={() => removeTeamMember(userId)} className="ms-1 hover:bg-blue-300/30 dark:hover:bg-blue-500/30 rounded" >
                                                 <XIcon className="w-3 h-3" />
                                             </button>
                                         )}
@@ -165,10 +167,10 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
                     {/* Footer */}
                     <div className="flex justify-end gap-3 pt-2 text-sm">
                         <button type="button" onClick={() => setIsDialogOpen(false)} className="px-4 py-2 rounded border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-800" >
-                            Cancel
+                            {t("common.cancel")}
                         </button>
                         <button type="submit" disabled={isSubmitting || !currentWorkspace} className="px-4 py-2 rounded bg-gradient-to-br from-blue-500 to-blue-600 text-white dark:text-zinc-200 disabled:opacity-50" >
-                            {isSubmitting ? "Creating..." : "Create Project"}
+                            {isSubmitting ? t("common.creating") : t("createProject.submit")}
                         </button>
                     </div>
                 </form>

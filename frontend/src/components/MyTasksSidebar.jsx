@@ -3,10 +3,12 @@ import { CheckSquareIcon, ChevronDownIcon, ChevronRightIcon } from 'lucide-react
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useUser } from '@clerk/react';
+import { useTranslation } from 'react-i18next';
 
 function MyTasksSidebar() {
 
     const { user } = useUser()
+    const { t } = useTranslation();
 
     const { currentWorkspace } = useSelector((state) => state.workspace);
     const [showMyTasks, setShowMyTasks] = useState(false);
@@ -43,7 +45,7 @@ function MyTasksSidebar() {
             <div onClick={toggleMyTasks} className="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800" >
                 <div className="flex items-center gap-2">
                     <CheckSquareIcon className="w-4 h-4 text-gray-500 dark:text-zinc-400" />
-                    <h3 className="text-sm font-medium text-gray-700 dark:text-zinc-300">My Tasks</h3>
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-zinc-300">{t('sidebar.myTasks')}</h3>
                     <span className="bg-gray-200 dark:bg-zinc-700 text-gray-700 dark:text-zinc-300 text-xs px-2 py-0.5 rounded">
                         {myTasks.length}
                     </span>
@@ -51,16 +53,16 @@ function MyTasksSidebar() {
                 {showMyTasks ? (
                     <ChevronDownIcon className="w-4 h-4 text-gray-500 dark:text-zinc-400" />
                 ) : (
-                    <ChevronRightIcon className="w-4 h-4 text-gray-500 dark:text-zinc-400" />
+                    <ChevronRightIcon className="w-4 h-4 rtl:-scale-x-100 text-gray-500 dark:text-zinc-400" />
                 )}
             </div>
 
             {showMyTasks && (
-                <div className="mt-2 pl-2">
+                <div className="mt-2 ps-2">
                     <div className="space-y-1">
                         {myTasks.length === 0 ? (
                             <div className="px-3 py-2 text-xs text-gray-500 dark:text-zinc-500 text-center">
-                                No tasks assigned
+                                {t('sidebar.noTasksAssigned')}
                             </div>
                         ) : (
                             myTasks.map((task) => (
@@ -71,8 +73,8 @@ function MyTasksSidebar() {
                                             <p className="text-xs font-medium truncate">
                                                 {task.title}
                                             </p>
-                                            <p className="text-xs text-gray-500 dark:text-zinc-500 lowercase">
-                                                {task.status.replace('_', ' ')}
+                                            <p className="text-xs text-gray-500 dark:text-zinc-500">
+                                                {t(`taskStatus.${task.status}`)}
                                             </p>
                                         </div>
                                     </div>

@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { GitCommit, MessageSquare, Clock, Bug, Zap, Square } from "lucide-react";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { useDateLocale } from "../hooks/use-date-locale";
 
 const typeIcons = {
     BUG: { icon: Bug, color: "text-red-500 dark:text-red-400" },
@@ -22,6 +24,8 @@ const RECENT_LIMIT = 10;
 
 const RecentActivity = () => {
     const { currentWorkspace } = useSelector((state) => state.workspace);
+    const { t } = useTranslation();
+    const dateLocale = useDateLocale();
 
     // Newest change first; ISO timestamps sort correctly as strings, so no Date parsing per comparison
     const tasks = useMemo(
@@ -36,7 +40,7 @@ const RecentActivity = () => {
     return (
         <div className="bg-white dark:bg-zinc-950 dark:bg-gradient-to-br dark:from-zinc-800/70 dark:to-zinc-900/50 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 rounded-lg transition-all overflow-hidden">
             <div className="border-b border-zinc-200 dark:border-zinc-800 p-4">
-                <h2 className="text-lg text-zinc-800 dark:text-zinc-200">Recent Activity</h2>
+                <h2 className="text-lg text-zinc-800 dark:text-zinc-200">{t("dashboard.recentActivity.title")}</h2>
             </div>
 
             <div className="p-0">
@@ -45,7 +49,7 @@ const RecentActivity = () => {
                         <div className="w-16 h-16 mx-auto mb-4 bg-zinc-200 dark:bg-zinc-800 rounded-full flex items-center justify-center">
                             <Clock className="w-8 h-8 text-zinc-600 dark:text-zinc-500" />
                         </div>
-                        <p className="text-zinc-600 dark:text-zinc-400">No recent activity</p>
+                        <p className="text-zinc-600 dark:text-zinc-400">{t("dashboard.recentActivity.empty")}</p>
                     </div>
                 ) : (
                     <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -64,12 +68,12 @@ const RecentActivity = () => {
                                                 <h4 className="text-zinc-800 dark:text-zinc-200 truncate">
                                                     {task.title}
                                                 </h4>
-                                                <span className={`ml-2 px-2 py-1 rounded text-xs ${statusColors[task.status] || "bg-zinc-300 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300"}`}>
-                                                    {task.status.replace("_", " ")}
+                                                <span className={`ms-2 px-2 py-1 rounded text-xs ${statusColors[task.status] || "bg-zinc-300 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300"}`}>
+                                                    {t(`taskStatus.${task.status}`)}
                                                 </span>
                                             </div>
                                             <div className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
-                                                <span className="capitalize">{task.type.toLowerCase()}</span>
+                                                <span>{t(`taskType.${task.type}`)}</span>
                                                 {task.assignee && (
                                                     <div className="flex items-center gap-1">
                                                         <div className="w-4 h-4 bg-zinc-300 dark:bg-zinc-700 rounded-full flex items-center justify-center text-[10px] text-zinc-800 dark:text-zinc-200">
@@ -79,7 +83,7 @@ const RecentActivity = () => {
                                                     </div>
                                                 )}
                                                 <span>
-                                                    {format(new Date(task.updatedAt), "MMM d, h:mm a")}
+                                                    {format(new Date(task.updatedAt), "MMM d, h:mm a", { locale: dateLocale })}
                                                 </span>
                                             </div>
                                         </div>

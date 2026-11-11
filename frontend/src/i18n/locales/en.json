@@ -1,0 +1,341 @@
+{
+    "nav": {
+        "switchLanguage": "Switch to Arabic",
+        "languageShort": "ع"
+    },
+    "common": {
+        "save": "Save",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "create": "Create",
+        "creating": "Creating...",
+        "delete": "Delete",
+        "close": "Close",
+        "loading": "Loading...",
+        "search": "Search",
+        "viewAll": "View all",
+        "showLess": "Show less",
+        "unassigned": "Unassigned",
+        "tryAgain": "Try again"
+    },
+    "taskStatus": {
+        "TODO": "To Do",
+        "IN_PROGRESS": "In Progress",
+        "DONE": "Done"
+    },
+    "projectStatus": {
+        "PLANNING": "Planning",
+        "ACTIVE": "Active",
+        "ON_HOLD": "On Hold",
+        "COMPLETED": "Completed",
+        "CANCELLED": "Cancelled"
+    },
+    "priority": {
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High"
+    },
+    "priorityLabel": "{{priority}} priority",
+    "taskType": {
+        "TASK": "Task",
+        "BUG": "Bug",
+        "FEATURE": "Feature",
+        "IMPROVEMENT": "Improvement",
+        "OTHER": "Other"
+    },
+    "role": {
+        "ADMIN": "Admin",
+        "MEMBER": "Member",
+        "fallback": "User"
+    },
+    "layout": {
+        "loadError": "Couldn't load your workspaces",
+        "noWorkspaceTitle": "No workspace yet",
+        "noWorkspaceHint": "Create one, or join one you've been invited to."
+    },
+    "sidebar": {
+        "dashboard": "Dashboard",
+        "projects": "Projects",
+        "team": "Team",
+        "settings": "Settings",
+        "myTasks": "My Tasks",
+        "noTasksAssigned": "No tasks assigned",
+        "projectTabs": {
+            "tasks": "Tasks",
+            "analytics": "Analytics",
+            "calendar": "Calendar",
+            "settings": "Settings"
+        }
+    },
+    "navbar": {
+        "searchProjects": "Search projects",
+        "searchPlaceholder": "Search projects..."
+    },
+    "workspace": {
+        "select": "Select Workspace",
+        "count_one": "{{count}} workspace",
+        "count_other": "{{count}} workspaces",
+        "heading": "Workspaces",
+        "memberCount_one": "{{count}} member",
+        "memberCount_other": "{{count}} members",
+        "create": "Create Workspace"
+    },
+    "invitations": {
+        "heading": "Invitations",
+        "join": "Join",
+        "joining": "Joining...",
+        "joined": "Joined {{name}}",
+        "pendingHeading": "Pending invitations ({{total}})",
+        "revoke": "Revoke",
+        "revoking": "Revoking...",
+        "revoked": "Invitation to {{email}} revoked"
+    },
+    "dashboard": {
+        "welcome": "Welcome back, {{name}}",
+        "subtitle": "Here's what's happening with your projects today",
+        "newProject": "New Project",
+        "stats": {
+            "totalProjects": "Total Projects",
+            "projectsIn": "projects in {{workspace}}",
+            "completedProjects": "Completed Projects",
+            "ofTotal": "of {{total}} total",
+            "myTasks": "My Tasks",
+            "assignedToMe": "assigned to me",
+            "overdue": "Overdue",
+            "needAttention": "need attention"
+        },
+        "projectOverview": {
+            "title": "Project Overview",
+            "noProjects": "No projects yet",
+            "createFirst": "Create your First Project",
+            "noDescription": "No description",
+            "memberCount_one": "{{count}} member",
+            "memberCount_other": "{{count}} members",
+            "progress": "Progress"
+        },
+        "recentActivity": {
+            "title": "Recent Activity",
+            "empty": "No recent activity"
+        },
+        "tasksSummary": {
+            "myTasks": "My Tasks",
+            "myTasksEmpty": "No tasks assigned to you",
+            "overdue": "Overdue",
+            "overdueEmpty": "No overdue tasks",
+            "inProgress": "In Progress",
+            "inProgressEmpty": "No tasks in progress",
+            "viewMore_one": "View {{count}} more",
+            "viewMore_other": "View {{count}} more"
+        }
+    },
+    "notFound": {
+        "title": "Page not found",
+        "description": "The page you're looking for doesn't exist or has moved.",
+        "backToDashboard": "Back to dashboard"
+    },
+    "errors": {
+        "generic": "Something went wrong"
+    },
+    "projects": {
+        "title": "Projects",
+        "subtitle": "Manage and track your projects",
+        "newProject": "New Project",
+        "searchPlaceholder": "Search projects...",
+        "allStatus": "All Status",
+        "allPriority": "All Priority",
+        "createProject": "Create Project",
+        "empty": {
+            "title": "No projects found",
+            "description": "Create your first project to get started"
+        },
+        "card": {
+            "noDescription": "No description",
+            "progress": "Progress"
+        }
+    },
+    "projectDetails": {
+        "notFound": "Project not found",
+        "backToProjects": "Back to Projects",
+        "newTask": "New Task",
+        "stats": {
+            "totalTasks": "Total Tasks",
+            "completed": "Completed",
+            "inProgress": "In Progress",
+            "teamMembers": "Team Members"
+        },
+        "tabs": {
+            "tasks": "Tasks",
+            "calendar": "Calendar",
+            "analytics": "Analytics",
+            "settings": "Settings"
+        }
+    },
+    "createProject": {
+        "title": "Create New Project",
+        "inWorkspace": "In workspace: <name>{{name}}</name>",
+        "nameLabel": "Project Name",
+        "namePlaceholder": "Enter project name",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Describe your project",
+        "statusLabel": "Status",
+        "priorityLabel": "Priority",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "leadLabel": "Project Lead",
+        "membersLabel": "Team Members",
+        "addMembers": "Add team members",
+        "removeMember": "Remove {{email}}",
+        "submit": "Create Project",
+        "created": "Project created"
+    },
+    "projectSettings": {
+        "detailsTitle": "Project Details",
+        "readOnlyNotice": "Only workspace admins and the team lead can edit this project.",
+        "nameLabel": "Project Name",
+        "descriptionLabel": "Description",
+        "statusLabel": "Status",
+        "priorityLabel": "Priority",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "progressLabel": "Progress: {{progress}}%",
+        "saveChanges": "Save Changes",
+        "saved": "Project saved",
+        "membersTitle": "Team Members",
+        "addMember": "Add project member",
+        "unknownMember": "Unknown",
+        "teamLead": "Team Lead"
+    },
+    "analytics": {
+        "completionRate": "Completion Rate",
+        "activeTasks": "Active Tasks",
+        "overdueTasks": "Overdue Tasks",
+        "teamSize": "Team Size",
+        "byStatus": "Tasks by Status",
+        "byType": "Tasks by Type",
+        "byPriority": "Tasks by Priority",
+        "taskCount_one": "{{count}} task",
+        "taskCount_other": "{{count}} tasks"
+    },
+    "calendar": {
+        "title": "Task Calendar",
+        "taskCount_one": "{{count}} task",
+        "taskCount_other": "{{count}} tasks",
+        "tasksFor": "Tasks for {{date}}",
+        "upcomingTitle": "Upcoming Tasks",
+        "noUpcoming": "No upcoming tasks",
+        "overdueTitle": "Overdue Tasks ({{total}})",
+        "due": "Due {{date}}",
+        "moreCount_one": "+{{count}} more",
+        "moreCount_other": "+{{count}} more"
+    },
+    "addMember": {
+        "title": "Add Member to Project",
+        "addingTo": "Adding to Project: <name>{{name}}</name>",
+        "memberLabel": "Workspace member",
+        "selectMember": "Select a member",
+        "everyoneAdded": "Everyone is already on this project",
+        "adding": "Adding...",
+        "submit": "Add Member",
+        "added": "Member added"
+    },
+    "tasks": {
+        "columns": {
+            "title": "Title",
+            "type": "Type",
+            "priority": "Priority",
+            "status": "Status",
+            "assignee": "Assignee",
+            "dueDate": "Due Date"
+        },
+        "filters": {
+            "allStatuses": "All Statuses",
+            "allTypes": "All Types",
+            "allPriorities": "All Priorities",
+            "allAssignees": "All Assignees",
+            "reset": "Reset",
+            "by": {
+                "status": "Filter by status",
+                "type": "Filter by type",
+                "priority": "Filter by priority",
+                "assignee": "Filter by assignee"
+            }
+        },
+        "toast": {
+            "updatingStatus": "Updating status...",
+            "statusUpdated": "Task status updated",
+            "deleting": "Deleting tasks...",
+            "deleted": "Tasks deleted"
+        },
+        "confirmDelete": "Are you sure you want to delete the selected tasks?",
+        "selectAllVisible": "Select all visible tasks",
+        "selectTask": "Select {{title}}",
+        "noTasksForFilters": "No tasks found for the selected filters.",
+        "statusLocked": "Only admins, the team lead or the assignee can change this",
+        "avatarAlt": "avatar"
+    },
+    "createTask": {
+        "heading": "Create New Task",
+        "title": "Title",
+        "titlePlaceholder": "Task title",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe the task",
+        "type": "Type",
+        "priority": "Priority",
+        "assignee": "Assignee",
+        "selectAssignee": "Select assignee…",
+        "status": "Status",
+        "dueDate": "Due Date",
+        "submit": "Create Task",
+        "toastCreated": "Task created"
+    },
+    "taskDetails": {
+        "notFound": "Task not found.",
+        "discussion": "Task Discussion ({{total}})",
+        "noComments": "No comments yet. Be the first!",
+        "commentLabel": "Write a comment",
+        "commentPlaceholder": "Write a comment...",
+        "posting": "Posting...",
+        "post": "Post",
+        "due": "Due : {{date}}",
+        "projectDetails": "Project Details",
+        "projectStartDate": "Project Start Date: {{date}}",
+        "projectStatus": "Status: {{status}}",
+        "projectPriority": "Priority: {{priority}}",
+        "projectProgress": "Progress: {{progress}}%"
+    },
+    "team": {
+        "heading": "Team",
+        "subtitle": "Manage team members and their contributions",
+        "inviteMember": "Invite Member",
+        "stats": {
+            "totalMembers": "Total Members",
+            "activeProjects": "Active Projects",
+            "totalTasks": "Total Tasks"
+        },
+        "searchPlaceholder": "Search team members...",
+        "empty": {
+            "noMembers": "No team members yet",
+            "noMembersHint": "Invite team members to start collaborating",
+            "noMatches": "No members match your search",
+            "noMatchesHint": "Try adjusting your search term"
+        }
+    },
+    "members": {
+        "columns": {
+            "name": "Name",
+            "email": "Email",
+            "role": "Role"
+        },
+        "unknownUser": "Unknown User"
+    },
+    "invite": {
+        "heading": "Invite Team Member",
+        "invitingTo": "Inviting to workspace:",
+        "emailLabel": "Email Address",
+        "emailPlaceholder": "Enter email address",
+        "roleLabel": "Role",
+        "sending": "Sending...",
+        "submit": "Send Invitation",
+        "toastSent": "Invitation sent to {{email}}"
+    }
+}

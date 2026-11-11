@@ -11,6 +11,7 @@ import { Loader2Icon, Plus } from 'lucide-react'
 import { useUser, useAuth, useClerk, useOrganization, RedirectToSignIn } from '@clerk/react'
 import { MyInvitations } from '../components/MyInvitations'
 import { clerkErrorMessage } from '../lib/clerk-error'
+import { useTranslation } from 'react-i18next'
 
 // A new workspace reaches our database through the webhook a moment after Clerk activates it
 const RETRY_DELAY_MS = 1500
@@ -26,6 +27,7 @@ const Layout = () => {
     const { organization } = useOrganization()
     const userId = user?.id
     const activeOrgId = organization?.id
+    const { t } = useTranslation()
 
     // Initial load of theme
     useEffect(() => {
@@ -87,22 +89,22 @@ const Layout = () => {
     // Without this, a failed request would look like "no workspaces" and invite creating a duplicate
     if (error && workspaces.length === 0) return (
         <main className='flex flex-col items-center justify-center gap-4 h-screen p-6 text-center bg-white dark:bg-zinc-950 text-gray-900 dark:text-slate-100'>
-            <h1 className='text-xl font-semibold'>Couldn't load your workspaces</h1>
+            <h1 className='text-xl font-semibold'>{t('layout.loadError')}</h1>
             <p className='text-sm text-gray-500 dark:text-zinc-400'>{error}</p>
             <button type="button" onClick={() => dispatch(fetchWorkspaces(activeOrgId))} className='px-4 py-2 rounded text-sm text-white bg-gradient-to-br from-blue-500 to-blue-600 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500'>
-                Try again
+                {t('common.tryAgain')}
             </button>
         </main>
     )
 
     if (workspaces.length === 0) return (
         <main className='flex flex-col items-center justify-center gap-4 h-screen p-6 text-center bg-white dark:bg-zinc-950 text-gray-900 dark:text-slate-100'>
-            <h1 className='text-xl font-semibold'>No workspace yet</h1>
-            <p className='text-sm text-gray-500 dark:text-zinc-400'>Create one, or join one you've been invited to.</p>
+            <h1 className='text-xl font-semibold'>{t('layout.noWorkspaceTitle')}</h1>
+            <p className='text-sm text-gray-500 dark:text-zinc-400'>{t('layout.noWorkspaceHint')}</p>
             {/* A newly invited person lands here, with no sidebar, so this is where they can accept */}
             <MyInvitations className='w-full max-w-xs rounded border border-gray-200 dark:border-zinc-800 p-2' />
             <button type="button" onClick={() => openCreateOrganization({ afterCreateOrganizationUrl: '/' })} className='flex items-center gap-2 px-4 py-2 rounded text-sm text-white bg-gradient-to-br from-blue-500 to-blue-600 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500'>
-                <Plus className='size-4' /> Create Workspace
+                <Plus className='size-4' /> {t('workspace.create')}
             </button>
         </main>
     )
@@ -110,7 +112,8 @@ const Layout = () => {
     return (
         <div className="flex bg-white dark:bg-zinc-950 text-gray-900 dark:text-slate-100">
             <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-            <div className="flex-1 flex flex-col h-screen">
+            {/* min-w-0: a flex item won't shrink below its content by default, so one long nowrap title widened the page past the phone screen */}
+            <div className="flex-1 flex flex-col h-screen min-w-0">
                 <Navbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
                 <div className="flex-1 h-full p-6 xl:p-10 xl:px-16 overflow-y-scroll">
                     <Outlet />

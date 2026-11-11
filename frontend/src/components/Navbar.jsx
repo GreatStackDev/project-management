@@ -4,12 +4,16 @@ import { toggleTheme } from '../features/themeSlice'
 import { MoonIcon, SunIcon } from 'lucide-react'
 import { UserButton } from '@clerk/react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 const Navbar = ({ setIsSidebarOpen }) => {
 
     const dispatch = useDispatch();
     const { theme } = useSelector(state => state.theme);
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
+
+    const toggleLanguage = () => i18n.changeLanguage(i18n.language === 'ar' ? 'en' : 'ar');
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -24,24 +28,29 @@ const Navbar = ({ setIsSidebarOpen }) => {
                 <div className="flex items-center gap-4 min-w-0 flex-1">
                     {/* Sidebar Trigger */}
                     <button onClick={() => setIsSidebarOpen((prev) => !prev)} className="sm:hidden p-2 rounded-lg transition-colors text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-zinc-800" >
-                        <PanelLeft size={20} />
+                        <PanelLeft size={20} className="rtl:-scale-x-100" />
                     </button>
 
                     {/* A form so Enter submits natively, on every keyboard */}
                     <form role="search" onSubmit={handleSearch} className="relative flex-1 max-w-sm">
-                        <SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-400 size-3.5" />
+                        <SearchIcon className="absolute start-2.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-400 size-3.5" />
                         <input
                             type="search"
                             name="search"
-                            aria-label="Search projects"
-                            placeholder="Search projects..."
-                            className="pl-8 pr-4 py-2 w-full bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-md text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
+                            aria-label={t('navbar.searchProjects')}
+                            placeholder={t('navbar.searchPlaceholder')}
+                            className="ps-8 pe-4 py-2 w-full bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-md text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
                         />
                     </form>
                 </div>
 
                 {/* Right section */}
                 <div className="flex items-center gap-3">
+
+                    {/* Language Toggle: shows the language you'd switch to */}
+                    <button type="button" onClick={toggleLanguage} aria-label={t('nav.switchLanguage')} title={t('nav.switchLanguage')} className="size-8 flex items-center justify-center bg-white dark:bg-zinc-800 shadow rounded-lg text-sm font-medium text-gray-800 dark:text-gray-200 transition hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500">
+                        {t('nav.languageShort')}
+                    </button>
 
                     {/* Theme Toggle */}
                     <button onClick={() => dispatch(toggleTheme())} className="size-8 flex items-center justify-center bg-white dark:bg-zinc-800 shadow rounded-lg transition hover:scale-105 active:scale-95">
