@@ -112,7 +112,8 @@ const Layout = () => {
     return (
         <div className="flex bg-white dark:bg-zinc-950 text-gray-900 dark:text-slate-100">
             <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-            <div className="flex-1 flex flex-col h-screen">
+            {/* min-w-0: a flex item won't shrink below its content by default, so one long nowrap title widened the page past the phone screen */}
+            <div className="flex-1 flex flex-col h-screen min-w-0">
                 <Navbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
                 <div className="flex-1 h-full p-6 xl:p-10 xl:px-16 overflow-y-scroll">
                     <Outlet />

@@ -54,7 +54,7 @@ export default function ProjectSettings({ project }) {
     const labelClasses = "text-sm text-zinc-600 dark:text-zinc-400";
 
     return (
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Project Details */}
             <div className={cardClasses}>
                 <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-300 mb-4">{t("projectSettings.detailsTitle")}</h2>
