@@ -8,6 +8,12 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Clerk's widgets stay English, so its portaled popover and modals stay LTR inside an RTL page */
+.cl-userButtonPopoverCard,
+.cl-modalContent {
+    direction: ltr;
+}
+
 .no-scrollbar::-webkit-scrollbar {
     display: none;
 }

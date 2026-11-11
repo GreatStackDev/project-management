@@ -12,7 +12,9 @@ const PRIORITY_COLORS = {
 };
 
 const ProjectAnalytics = ({ project, tasks }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    // SVG charts ignore CSS direction, so RTL mirroring is done through recharts' own axis props
+    const isRtl = i18n.dir() === "rtl";
     const { stats, statusData, typeData, priorityData } = useMemo(() => {
         const now = new Date();
         const total = tasks.length;
@@ -113,8 +115,8 @@ const ProjectAnalytics = ({ project, tasks }) => {
                     {/* Axes use currentColor, so this text colour (and its dark: variant) themes them */}
                     <ResponsiveContainer width="100%" height={300} className="text-zinc-500 dark:text-zinc-400">
                         <BarChart data={statusData}>
-                            <XAxis dataKey="name" tick={{ fill: "currentColor", fontSize: 12 }} axisLine={{ stroke: "currentColor" }} />
-                            <YAxis tick={{ fill: "currentColor", fontSize: 12 }} axisLine={{ stroke: "currentColor" }} />
+                            <XAxis dataKey="name" reversed={isRtl} tick={{ fill: "currentColor", fontSize: 12 }} axisLine={{ stroke: "currentColor" }} />
+                            <YAxis orientation={isRtl ? "right" : "left"} tick={{ fill: "currentColor", fontSize: 12 }} axisLine={{ stroke: "currentColor" }} />
                             <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                         </BarChart>
                     </ResponsiveContainer>
