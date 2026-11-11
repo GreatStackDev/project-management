@@ -2,9 +2,11 @@ import { FolderOpen, CheckCircle, Users, AlertTriangle } from "lucide-react";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useUser } from "@clerk/react";
+import { useTranslation } from "react-i18next";
 
 export default function StatsGrid() {
     const { user } = useUser();
+    const { t } = useTranslation();
     const currentWorkspace = useSelector(
         (state) => state?.workspace?.currentWorkspace || null
     );
@@ -26,33 +28,33 @@ export default function StatsGrid() {
     const statCards = [
         {
             icon: FolderOpen,
-            title: "Total Projects",
+            title: t("dashboard.stats.totalProjects"),
             value: stats.totalProjects,
-            subtitle: `projects in ${currentWorkspace?.name}`,
+            subtitle: t("dashboard.stats.projectsIn", { workspace: currentWorkspace?.name }),
             bgColor: "bg-blue-500/10",
             textColor: "text-blue-500",
         },
         {
             icon: CheckCircle,
-            title: "Completed Projects",
+            title: t("dashboard.stats.completedProjects"),
             value: stats.completedProjects,
-            subtitle: `of ${stats.totalProjects} total`,
+            subtitle: t("dashboard.stats.ofTotal", { total: stats.totalProjects }),
             bgColor: "bg-emerald-500/10",
             textColor: "text-emerald-500",
         },
         {
             icon: Users,
-            title: "My Tasks",
+            title: t("dashboard.stats.myTasks"),
             value: stats.myTasks,
-            subtitle: "assigned to me",
+            subtitle: t("dashboard.stats.assignedToMe"),
             bgColor: "bg-purple-500/10",
             textColor: "text-purple-500",
         },
         {
             icon: AlertTriangle,
-            title: "Overdue",
+            title: t("dashboard.stats.overdue"),
             value: stats.overdueIssues,
-            subtitle: "need attention",
+            subtitle: t("dashboard.stats.needAttention"),
             bgColor: "bg-amber-500/10",
             textColor: "text-amber-500",
         },

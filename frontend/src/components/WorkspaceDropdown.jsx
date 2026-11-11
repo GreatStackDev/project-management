@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useClerk } from "@clerk/react";
 import { assets } from "../assets/assets";
 import { MyInvitations } from "./MyInvitations";
+import { useTranslation } from "react-i18next";
 
 function WorkspaceDropdown() {
 
@@ -17,6 +18,7 @@ function WorkspaceDropdown() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { openCreateOrganization, setActive } = useClerk();
+    const { t } = useTranslation();
 
     // Clerk's active organization is what the backend reads from the token, so it must switch too
     const onSelectWorkspace = async (organizationId) => {
@@ -50,10 +52,10 @@ function WorkspaceDropdown() {
                     <img src={currentWorkspace?.image_url || assets.workspace_img_default} alt="" className="w-8 h-8 rounded shadow" />
                     <div className="min-w-0 flex-1">
                         <p className="font-semibold text-gray-800 dark:text-white text-sm truncate">
-                            {currentWorkspace?.name || "Select Workspace"}
+                            {currentWorkspace?.name || t("workspace.select")}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-zinc-400 truncate">
-                            {workspaces.length} workspace{workspaces.length !== 1 ? "s" : ""}
+                            {t("workspace.count", { count: workspaces.length })}
                         </p>
                     </div>
                 </div>
@@ -65,7 +67,7 @@ function WorkspaceDropdown() {
                     <MyInvitations className="p-2 border-b border-gray-200 dark:border-zinc-700" />
                     <div className="p-2">
                         <p className="text-xs text-gray-500 dark:text-zinc-400 uppercase tracking-wider mb-2 px-2">
-                            Workspaces
+                            {t("workspace.heading")}
                         </p>
                         {workspaces.map((ws) => (
                             <button type="button" key={ws.id} onClick={() => onSelectWorkspace(ws.id)} className="w-full flex items-center gap-3 p-2 text-start cursor-pointer rounded hover:bg-gray-100 dark:hover:bg-zinc-800" >
@@ -75,7 +77,7 @@ function WorkspaceDropdown() {
                                         {ws.name}
                                     </span>
                                     <span className="block text-xs text-gray-500 dark:text-zinc-400 truncate">
-                                        {ws.members.length} member{ws.members.length !== 1 ? "s" : ""}
+                                        {t("workspace.memberCount", { count: ws.members.length })}
                                     </span>
                                 </span>
                                 {currentWorkspace?.id === ws.id && (
@@ -89,7 +91,7 @@ function WorkspaceDropdown() {
 
                     <button type="button" onClick={onCreateWorkspace} className="w-full p-2 text-start cursor-pointer rounded group hover:bg-gray-100 dark:hover:bg-zinc-800" >
                         <span className="flex items-center text-xs gap-2 my-1 w-full text-blue-600 dark:text-blue-400 group-hover:text-blue-500 dark:group-hover:text-blue-300">
-                            <Plus className="w-4 h-4" /> Create Workspace
+                            <Plus className="w-4 h-4" /> {t("workspace.create")}
                         </span>
                     </button>
                 </div>

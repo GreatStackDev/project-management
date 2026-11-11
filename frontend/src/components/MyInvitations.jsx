@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useOrganizationList } from "@clerk/react";
 import toast from "react-hot-toast";
 import { clerkErrorMessage } from "../lib/clerk-error";
+import { useTranslation } from "react-i18next";
 
 const PENDING = { status: "pending" };
 
@@ -10,6 +11,7 @@ const PENDING = { status: "pending" };
 export function MyInvitations({ className = "" }) {
     const { isLoaded, setActive, userInvitations } = useOrganizationList({ userInvitations: PENDING });
     const [joiningId, setJoiningId] = useState(null);
+    const { t } = useTranslation();
     const invitations = userInvitations?.data ?? [];
 
     if (!isLoaded || invitations.length === 0) return null;
@@ -21,7 +23,7 @@ export function MyInvitations({ className = "" }) {
             // Switching the active workspace makes Layout refetch, and its retry waits for the webhook to save the membership
             await setActive({ organization: invitation.publicOrganizationData.id });
             await userInvitations.revalidate();
-            toast.success(`Joined ${invitation.publicOrganizationData.name}`);
+            toast.success(t("invitations.joined", { name: invitation.publicOrganizationData.name }));
         } catch (error) {
             toast.error(clerkErrorMessage(error));
         } finally {
@@ -32,14 +34,14 @@ export function MyInvitations({ className = "" }) {
     return (
         <section aria-labelledby="my-invitations" className={className}>
             <h2 id="my-invitations" className="text-xs text-gray-500 dark:text-zinc-400 uppercase tracking-wider mb-2 px-2">
-                Invitations
+                {t("invitations.heading")}
             </h2>
             <ul className="space-y-1">
                 {invitations.map((invitation) => (
                     <li key={invitation.id} className="flex items-center justify-between gap-3 p-2 rounded text-sm text-start">
                         <span className="truncate text-gray-800 dark:text-white">{invitation.publicOrganizationData.name}</span>
                         <button type="button" onClick={() => handleJoin(invitation)} disabled={joiningId !== null} className="shrink-0 px-3 py-1 rounded text-xs text-white bg-gradient-to-br from-blue-500 to-blue-600 hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500" >
-                            {joiningId === invitation.id ? "Joining..." : "Join"}
+                            {joiningId === invitation.id ? t("invitations.joining") : t("invitations.join")}
                         </button>
                     </li>
                 ))}

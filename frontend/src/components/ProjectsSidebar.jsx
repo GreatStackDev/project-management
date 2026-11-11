@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { ChevronRightIcon, SettingsIcon, KanbanIcon, ChartColumnIcon, CalendarIcon, ArrowRightIcon } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 const ProjectSidebar = () => {
 
     const location = useLocation();
+    const { t } = useTranslation();
 
     const [expandedProjects, setExpandedProjects] = useState(new Set());
     const [searchParams] = useSearchParams();
@@ -16,10 +18,10 @@ const ProjectSidebar = () => {
 
     // `key` is the ?tab= value ProjectDetails reads, so it must never be a translated label
     const getProjectSubItems = (projectId) => [
-        { key: 'tasks', title: 'Tasks', icon: KanbanIcon },
-        { key: 'analytics', title: 'Analytics', icon: ChartColumnIcon },
-        { key: 'calendar', title: 'Calendar', icon: CalendarIcon },
-        { key: 'settings', title: 'Settings', icon: SettingsIcon },
+        { key: 'tasks', title: t('sidebar.projectTabs.tasks'), icon: KanbanIcon },
+        { key: 'analytics', title: t('sidebar.projectTabs.analytics'), icon: ChartColumnIcon },
+        { key: 'calendar', title: t('sidebar.projectTabs.calendar'), icon: CalendarIcon },
+        { key: 'settings', title: t('sidebar.projectTabs.settings'), icon: SettingsIcon },
     ].map((item) => ({ ...item, url: `/projectsDetail?id=${projectId}&tab=${item.key}` }));
 
     const toggleProject = (id) => {
@@ -32,7 +34,7 @@ const ProjectSidebar = () => {
         <div className="mt-6 px-3">
             <div className="flex items-center justify-between px-3 py-2">
                 <h3 className="text-xs font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">
-                    Projects
+                    {t('sidebar.projects')}
                 </h3>
                 <Link to="/projects">
                     <button className="size-5 text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 rounded flex items-center justify-center transition-colors duration-200">

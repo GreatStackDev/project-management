@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { CheckCircle, Clock, AlertTriangle, Users, ArrowRightIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // Colors for charts and priorities
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
@@ -11,6 +12,7 @@ const PRIORITY_COLORS = {
 };
 
 const ProjectAnalytics = ({ project, tasks }) => {
+    const { t } = useTranslation();
     const { stats, statusData, typeData, priorityData } = useMemo(() => {
         const now = new Date();
         const total = tasks.length;
@@ -40,42 +42,42 @@ const ProjectAnalytics = ({ project, tasks }) => {
 
         return {
             stats,
-            statusData: Object.entries(statusMap).map(([k, v]) => ({ name: k.replace("_", " "), value: v })),
-            typeData: Object.entries(typeMap).filter(([, v]) => v > 0).map(([k, v]) => ({ name: k, value: v })),
+            statusData: Object.entries(statusMap).map(([k, v]) => ({ name: t(`taskStatus.${k}`), value: v })),
+            typeData: Object.entries(typeMap).filter(([, v]) => v > 0).map(([k, v]) => ({ name: t(`taskType.${k}`), value: v })),
             priorityData: Object.entries(priorityMap).map(([k, v]) => ({
                 name: k,
                 value: v,
                 percentage: total > 0 ? Math.round((v / total) * 100) : 0,
             })),
         };
-    }, [tasks]);
+    }, [tasks, t]);
 
     const completionRate = stats.total ? Math.round((stats.completed / stats.total) * 100) : 0;
 
     const metrics = [
         {
-            label: "Completion Rate",
+            label: t("analytics.completionRate"),
             value: `${completionRate}%`,
             color: "text-emerald-600 dark:text-emerald-400",
             icon: <CheckCircle className="size-5 text-emerald-600 dark:text-emerald-400" />,
             bg: "bg-emerald-200 dark:bg-emerald-500/10",
         },
         {
-            label: "Active Tasks",
+            label: t("analytics.activeTasks"),
             value: stats.inProgress,
             color: "text-blue-600 dark:text-blue-400",
             icon: <Clock className="size-5 text-blue-600 dark:text-blue-400" />,
             bg: "bg-blue-200 dark:bg-blue-500/10",
         },
         {
-            label: "Overdue Tasks",
+            label: t("analytics.overdueTasks"),
             value: stats.overdue,
             color: "text-red-600 dark:text-red-400",
             icon: <AlertTriangle className="size-5 text-red-600 dark:text-red-400" />,
             bg: "bg-red-200 dark:bg-red-500/10",
         },
         {
-            label: "Team Size",
+            label: t("analytics.teamSize"),
             value: project?.members?.length || 0,
             color: "text-purple-600 dark:text-purple-400",
             icon: <Users className="size-5 text-purple-600 dark:text-purple-400" />,
@@ -107,7 +109,7 @@ const ProjectAnalytics = ({ project, tasks }) => {
             <div className="grid lg:grid-cols-2 gap-6">
                 {/* Tasks by Status */}
                 <div className="not-dark:bg-white dark:bg-gradient-to-br dark:from-zinc-800/70 dark:to-zinc-900/50 border border-zinc-300 dark:border-zinc-800 rounded-lg p-6">
-                    <h2 className="text-zinc-900 dark:text-white mb-4 font-medium">Tasks by Status</h2>
+                    <h2 className="text-zinc-900 dark:text-white mb-4 font-medium">{t("analytics.byStatus")}</h2>
                     {/* Axes use currentColor, so this text colour (and its dark: variant) themes them */}
                     <ResponsiveContainer width="100%" height={300} className="text-zinc-500 dark:text-zinc-400">
                         <BarChart data={statusData}>
@@ -120,7 +122,7 @@ const ProjectAnalytics = ({ project, tasks }) => {
 
                 {/* Tasks by Type */}
                 <div className="not-dark:bg-white dark:bg-gradient-to-br dark:from-zinc-800/70 dark:to-zinc-900/50 border border-zinc-300 dark:border-zinc-800 rounded-lg p-6">
-                    <h2 className="text-zinc-900 dark:text-white mb-4 font-medium">Tasks by Type</h2>
+                    <h2 className="text-zinc-900 dark:text-white mb-4 font-medium">{t("analytics.byType")}</h2>
                     <ResponsiveContainer width="100%" height={300}>
                         <PieChart>
                             <Pie
@@ -143,17 +145,17 @@ const ProjectAnalytics = ({ project, tasks }) => {
 
             {/* Priority Breakdown */}
             <div className="not-dark:bg-white dark:bg-gradient-to-br dark:from-zinc-800/70 dark:to-zinc-900/50 border border-zinc-300 dark:border-zinc-800 rounded-lg p-6">
-                <h2 className="text-zinc-900 dark:text-white mb-4 font-medium">Tasks by Priority</h2>
+                <h2 className="text-zinc-900 dark:text-white mb-4 font-medium">{t("analytics.byPriority")}</h2>
                 <div className="space-y-4">
                     {priorityData.map((p) => (
                         <div key={p.name} className="space-y-2">
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
                                     <ArrowRightIcon className={`size-3.5 rtl:-scale-x-100 ${PRIORITY_COLORS[p.name]} bg-transparent dark:bg-transparent`} />
-                                    <span className="text-zinc-900 dark:text-zinc-200 capitalize">{p.name.toLowerCase()}</span>
+                                    <span className="text-zinc-900 dark:text-zinc-200">{t(`priority.${p.name}`)}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-zinc-600 dark:text-zinc-400 text-sm">{p.value} tasks</span>
+                                    <span className="text-zinc-600 dark:text-zinc-400 text-sm">{t("analytics.taskCount", { count: p.value })}</span>
                                     <span className="px-2 py-0.5 border border-zinc-400 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 text-xs rounded">
                                         {p.percentage}%
                                     </span>

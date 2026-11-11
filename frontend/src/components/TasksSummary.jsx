@@ -3,6 +3,7 @@ import { ArrowRight, Clock, AlertTriangle, User } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useUser } from "@clerk/react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const PREVIEW_COUNT = 3;
 
@@ -10,6 +11,7 @@ export default function TasksSummary() {
 
     const { currentWorkspace } = useSelector((state) => state.workspace);
     const { user } = useUser();
+    const { t } = useTranslation();
     const [tasks, setTasks] = useState([]);
     // Which cards show their full list, keyed by card key (titles get translated)
     const [expanded, setExpanded] = useState({});
@@ -28,8 +30,8 @@ export default function TasksSummary() {
     const summaryCards = [
         {
             key: "myTasks",
-            title: "My Tasks",
-            empty: "No my tasks",
+            title: t("dashboard.tasksSummary.myTasks"),
+            empty: t("dashboard.tasksSummary.myTasksEmpty"),
             count: myTasks.length,
             icon: User,
             color: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-400",
@@ -37,8 +39,8 @@ export default function TasksSummary() {
         },
         {
             key: "overdue",
-            title: "Overdue",
-            empty: "No overdue",
+            title: t("dashboard.tasksSummary.overdue"),
+            empty: t("dashboard.tasksSummary.overdueEmpty"),
             count: overdueTasks.length,
             icon: AlertTriangle,
             color: "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-400",
@@ -46,8 +48,8 @@ export default function TasksSummary() {
         },
         {
             key: "inProgress",
-            title: "In Progress",
-            empty: "No in progress",
+            title: t("dashboard.tasksSummary.inProgress"),
+            empty: t("dashboard.tasksSummary.inProgressEmpty"),
             count: inProgressIssues.length,
             icon: Clock,
             color: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-400",
@@ -84,8 +86,8 @@ export default function TasksSummary() {
                                         <h4 className="text-sm font-medium text-gray-800 dark:text-white truncate">
                                             {issue.title}
                                         </h4>
-                                        <p className="text-xs text-gray-600 dark:text-zinc-400 capitalize mt-1">
-                                            {issue.type} • {issue.priority} priority
+                                        <p className="text-xs text-gray-600 dark:text-zinc-400 mt-1">
+                                            {t(`taskType.${issue.type}`)} • {t("priorityLabel", { priority: t(`priority.${issue.priority}`) })}
                                         </p>
                                     </Link>
                                 ))}
@@ -96,7 +98,7 @@ export default function TasksSummary() {
                                         onClick={() => setExpanded((prev) => ({ ...prev, [card.key]: !prev[card.key] }))}
                                         className="flex items-center justify-center w-full text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-800 dark:hover:text-white mt-2"
                                     >
-                                        {expanded[card.key] ? "Show less" : `View ${card.count - PREVIEW_COUNT} more`}
+                                        {expanded[card.key] ? t("common.showLess") : t("dashboard.tasksSummary.viewMore", { count: card.count - PREVIEW_COUNT })}
                                         <ArrowRight className={`w-3 h-3 ms-2 rtl:-scale-x-100 transition-transform ${expanded[card.key] ? "-rotate-90 rtl:rotate-90" : ""}`} />
                                     </button>
                                 )}

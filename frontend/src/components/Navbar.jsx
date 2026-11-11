@@ -37,8 +37,8 @@ const Navbar = ({ setIsSidebarOpen }) => {
                         <input
                             type="search"
                             name="search"
-                            aria-label="Search projects"
-                            placeholder="Search projects..."
+                            aria-label={t('navbar.searchProjects')}
+                            placeholder={t('navbar.searchPlaceholder')}
                             className="ps-8 pe-4 py-2 w-full bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-md text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
                         />
                     </form>
