@@ -149,15 +149,15 @@ const ProjectTasks = ({ tasks, project }) => {
                 <div className="w-full">
                     {/* Desktop/Table View */}
                     <div className="hidden lg:block overflow-x-auto">
-                        <table className="min-w-full text-sm text-left not-dark:bg-white text-zinc-900 dark:text-zinc-300">
+                        <table className="min-w-full text-sm text-start not-dark:bg-white text-zinc-900 dark:text-zinc-300">
                             <thead className="text-xs uppercase dark:bg-zinc-800/70 text-zinc-500 dark:text-zinc-400 ">
                                 <tr>
                                     {canManage && (
-                                        <th className="pl-2 pr-1">
+                                        <th className="ps-2 pe-1">
                                             <input onChange={toggleSelectAll} checked={allVisibleSelected} aria-label="Select all visible tasks" type="checkbox" className="size-3 accent-zinc-600 dark:accent-zinc-500" />
                                         </th>
                                     )}
-                                    <th className={`px-4 py-3 ${canManage ? "pl-0" : ""}`}>Title</th>
+                                    <th className={`px-4 py-3 ${canManage ? "ps-0" : ""}`}>Title</th>
                                     <th className="px-4 py-3">Type</th>
                                     <th className="px-4 py-3">Priority</th>
                                     <th className="px-4 py-3">Status</th>

@@ -45,7 +45,7 @@ function WorkspaceDropdown() {
 
     return (
         <div className="relative m-4" ref={dropdownRef}>
-            <button onClick={() => setIsOpen(prev => !prev)} className="w-full flex items-center justify-between p-3 h-auto text-left rounded hover:bg-gray-100 dark:hover:bg-zinc-800" >
+            <button onClick={() => setIsOpen(prev => !prev)} className="w-full flex items-center justify-between p-3 h-auto text-start rounded hover:bg-gray-100 dark:hover:bg-zinc-800" >
                 <div className="flex items-center gap-3">
                     <img src={currentWorkspace?.image_url || assets.workspace_img_default} alt="" className="w-8 h-8 rounded shadow" />
                     <div className="min-w-0 flex-1">
@@ -61,14 +61,14 @@ function WorkspaceDropdown() {
             </button>
 
             {isOpen && (
-                <div className="absolute z-50 w-64 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded shadow-lg top-full left-0">
+                <div className="absolute z-50 w-64 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded shadow-lg top-full start-0">
                     <MyInvitations className="p-2 border-b border-gray-200 dark:border-zinc-700" />
                     <div className="p-2">
                         <p className="text-xs text-gray-500 dark:text-zinc-400 uppercase tracking-wider mb-2 px-2">
                             Workspaces
                         </p>
                         {workspaces.map((ws) => (
-                            <button type="button" key={ws.id} onClick={() => onSelectWorkspace(ws.id)} className="w-full flex items-center gap-3 p-2 text-left cursor-pointer rounded hover:bg-gray-100 dark:hover:bg-zinc-800" >
+                            <button type="button" key={ws.id} onClick={() => onSelectWorkspace(ws.id)} className="w-full flex items-center gap-3 p-2 text-start cursor-pointer rounded hover:bg-gray-100 dark:hover:bg-zinc-800" >
                                 <img src={ws.image_url || assets.workspace_img_default} alt="" className="w-6 h-6 rounded" />
                                 <span className="block flex-1 min-w-0">
                                     <span className="block text-sm font-medium text-gray-800 dark:text-white truncate">
@@ -87,7 +87,7 @@ function WorkspaceDropdown() {
 
                     <hr className="border-gray-200 dark:border-zinc-700" />
 
-                    <button type="button" onClick={onCreateWorkspace} className="w-full p-2 text-left cursor-pointer rounded group hover:bg-gray-100 dark:hover:bg-zinc-800" >
+                    <button type="button" onClick={onCreateWorkspace} className="w-full p-2 text-start cursor-pointer rounded group hover:bg-gray-100 dark:hover:bg-zinc-800" >
                         <span className="flex items-center text-xs gap-2 my-1 w-full text-blue-600 dark:text-blue-400 group-hover:text-blue-500 dark:group-hover:text-blue-300">
                             <Plus className="w-4 h-4" /> Create Workspace
                         </span>

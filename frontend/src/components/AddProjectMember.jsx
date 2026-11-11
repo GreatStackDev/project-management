@@ -55,8 +55,8 @@ const AddProjectMember = ({ project, isDialogOpen, setIsDialogOpen }) => {
                             Workspace member
                         </label>
                         <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 dark:text-zinc-400 w-4 h-4" />
-                            <select id="add-member" value={userId} onChange={(e) => setUserId(e.target.value)} className="pl-10 mt-1 w-full rounded border border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200 text-sm placeholder-zinc-400 dark:placeholder-zinc-500 py-2 focus:outline-none focus:border-blue-500" required >
+                            <Mail className="absolute start-3 top-1/2 -translate-y-1/2 text-zinc-500 dark:text-zinc-400 w-4 h-4" />
+                            <select id="add-member" value={userId} onChange={(e) => setUserId(e.target.value)} className="ps-10 mt-1 w-full rounded border border-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200 text-sm placeholder-zinc-400 dark:placeholder-zinc-500 py-2 focus:outline-none focus:border-blue-500" required >
                                 <option value="">{candidates.length ? "Select a member" : "Everyone is already on this project"}</option>
                                 {candidates.map((member) => (
                                     <option key={member.user.id} value={member.user.id}> {member.user.email} </option>

@@ -35,7 +35,7 @@ const ProjectSidebar = () => {
                 </h3>
                 <Link to="/projects">
                     <button className="size-5 text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 rounded flex items-center justify-center transition-colors duration-200">
-                        <ArrowRightIcon className="size-3" />
+                        <ArrowRightIcon className="size-3 rtl:-scale-x-100" />
                     </button>
                 </Link>
             </div>
@@ -44,13 +44,13 @@ const ProjectSidebar = () => {
                 {projects.map((project) => (
                     <div key={project.id}>
                         <button onClick={() => toggleProject(project.id)} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors duration-200 text-gray-700 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white" >
-                            <ChevronRightIcon className={`size-3 text-gray-500 dark:text-zinc-400 transition-transform duration-200 ${expandedProjects.has(project.id) && 'rotate-90'}`} />
+                            <ChevronRightIcon className={`size-3 text-gray-500 dark:text-zinc-400 rtl:-scale-x-100 transition-transform duration-200 ${expandedProjects.has(project.id) ? "rotate-90 rtl:-rotate-90" : ""}`} />
                             <div className="size-2 rounded-full bg-blue-500" />
                             <span className="truncate max-w-40 text-sm">{project.name}</span>
                         </button>
 
                         {expandedProjects.has(project.id) && (
-                            <div className="ml-5 mt-1 space-y-1">
+                            <div className="ms-5 mt-1 space-y-1">
                                 {getProjectSubItems(project.id).map((subItem) => {
                                     // checking if the current path matches the sub-item's URL
                                     const isActive =

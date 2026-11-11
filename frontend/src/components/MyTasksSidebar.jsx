@@ -51,12 +51,12 @@ function MyTasksSidebar() {
                 {showMyTasks ? (
                     <ChevronDownIcon className="w-4 h-4 text-gray-500 dark:text-zinc-400" />
                 ) : (
-                    <ChevronRightIcon className="w-4 h-4 text-gray-500 dark:text-zinc-400" />
+                    <ChevronRightIcon className="w-4 h-4 rtl:-scale-x-100 text-gray-500 dark:text-zinc-400" />
                 )}
             </div>
 
             {showMyTasks && (
-                <div className="mt-2 pl-2">
+                <div className="mt-2 ps-2">
                     <div className="space-y-1">
                         {myTasks.length === 0 ? (
                             <div className="px-3 py-2 text-xs text-gray-500 dark:text-zinc-500 text-center">

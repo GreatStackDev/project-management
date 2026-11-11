@@ -61,7 +61,7 @@ export default function ProjectDetail() {
             <div className="flex max-md:flex-col gap-4 flex-wrap items-start justify-between max-w-6xl">
                 <div className="flex items-center gap-4">
                     <button className="p-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400" onClick={() => navigate('/projects')}>
-                        <ArrowLeftIcon className="w-4 h-4" />
+                        <ArrowLeftIcon className="w-4 h-4 rtl:-scale-x-100" />
                     </button>
                     <div className="flex items-center gap-3">
                         <h1 className="text-xl font-medium">{project.name}</h1>

@@ -91,7 +91,7 @@ export default function TasksSummary() {
                                         className="flex items-center justify-center w-full text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-800 dark:hover:text-white mt-2"
                                     >
                                         {expanded[card.title] ? "Show less" : `View ${card.count - PREVIEW_COUNT} more`}
-                                        <ArrowRight className={`w-3 h-3 ml-2 transition-transform ${expanded[card.title] ? "-rotate-90" : ""}`} />
+                                        <ArrowRight className={`w-3 h-3 ms-2 rtl:-scale-x-100 transition-transform ${expanded[card.title] ? "-rotate-90 rtl:rotate-90" : ""}`} />
                                     </button>
                                 )}
                             </div>

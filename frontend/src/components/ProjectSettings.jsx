@@ -118,7 +118,7 @@ export default function ProjectSettings({ project }) {
                     </div>
 
                     {canManage && (
-                        <button type="submit" disabled={isSubmitting} className="ml-auto flex items-center text-sm justify-center gap-2 bg-gradient-to-br from-blue-500 to-blue-600 text-white px-4 py-2 rounded disabled:opacity-50" >
+                        <button type="submit" disabled={isSubmitting} className="ms-auto flex items-center text-sm justify-center gap-2 bg-gradient-to-br from-blue-500 to-blue-600 text-white px-4 py-2 rounded disabled:opacity-50" >
                             <Save className="size-4" /> {isSubmitting ? "Saving..." : "Save Changes"}
                         </button>
                     )}

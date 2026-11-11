@@ -76,9 +76,9 @@ const TaskDetails = () => {
 
                     <div className="flex-1 md:overflow-y-scroll no-scrollbar">
                         {comments.length > 0 ? (
-                            <div className="flex flex-col gap-4 mb-6 mr-2">
+                            <div className="flex flex-col gap-4 mb-6 me-2">
                                 {comments.map((comment) => (
-                                    <div key={comment.id} className={`sm:max-w-4/5 dark:bg-gradient-to-br dark:from-zinc-800 dark:to-zinc-900 border border-gray-300 dark:border-zinc-700 p-3 rounded-md ${comment.user.id === user?.id ? "ml-auto" : "mr-auto"}`} >
+                                    <div key={comment.id} className={`sm:max-w-4/5 dark:bg-gradient-to-br dark:from-zinc-800 dark:to-zinc-900 border border-gray-300 dark:border-zinc-700 p-3 rounded-md ${comment.user.id === user?.id ? "ms-auto" : "me-auto"}`} >
                                         <div className="flex items-center gap-2 mb-1 text-sm text-gray-500 dark:text-zinc-400">
                                             <img src={comment.user.image} alt="avatar" className="size-5 rounded-full" />
                                             <span className="font-medium text-gray-900 dark:text-white">{comment.user.name}</span>

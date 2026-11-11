@@ -50,11 +50,11 @@ const ProjectCalendar = ({ tasks }) => {
                         </h2>
                         <div className="flex gap-2 items-center">
                             <button onClick={() => handleMonthChange("prev")}>
-                                <ChevronLeft className="size-5 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white" />
+                                <ChevronLeft className="size-5 rtl:-scale-x-100 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white" />
                             </button>
                             <span className="text-zinc-900 dark:text-white">{format(currentMonth, "MMMM yyyy")}</span>
                             <button onClick={() => handleMonthChange("next")}>
-                                <ChevronRight className="size-5 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white" />
+                                <ChevronRight className="size-5 rtl:-scale-x-100 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white" />
                             </button>
                         </div>
                     </div>
@@ -103,7 +103,7 @@ const ProjectCalendar = ({ tasks }) => {
                             {getTasksForDate(selectedDate).map((task) => (
                                 <div
                                     key={task.id}
-                                    className={`bg-zinc-50 dark:bg-zinc-800/40 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition p-4 rounded border-l-4 ${priorityBorders[task.priority]}`}
+                                    className={`bg-zinc-50 dark:bg-zinc-800/40 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition p-4 rounded border-s-4 ${priorityBorders[task.priority]}`}
                                 >
                                     <div className="flex justify-between mb-2">
                                         <h4 className="text-zinc-900 dark:text-white font-medium">{task.title}</h4>
@@ -158,7 +158,7 @@ const ProjectCalendar = ({ tasks }) => {
 
                 {/* Overdue Tasks */}
                 {overdueTasks.length > 0 && (
-                    <div className="bg-white dark:bg-zinc-950  border border-red-300 dark:border-red-500 border-l-4 rounded-lg p-4">
+                    <div className="bg-white dark:bg-zinc-950  border border-red-300 dark:border-red-500 border-s-4 rounded-lg p-4">
                         <h3 className="text-red-700 dark:text-red-400 text-sm flex items-center gap-2 mb-3">
                             <Clock className="w-4 h-4" /> Overdue Tasks ({overdueTasks.length})
                         </h3>

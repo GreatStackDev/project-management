@@ -48,7 +48,7 @@ export default function Projects() {
                 {isAdmin && (
                     <>
                         <button type="button" onClick={() => setIsDialogOpen(true)} className="flex items-center px-5 py-2 text-sm rounded bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:opacity-90 transition" >
-                            <Plus className="size-4 mr-2" /> New Project
+                            <Plus className="size-4 me-2" /> New Project
                         </button>
                         <CreateProjectDialog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
                     </>
@@ -58,8 +58,8 @@ export default function Projects() {
             {/* Search and Filters */}
             <div className="flex flex-col md:flex-row gap-4">
                 <div className="relative w-full max-w-sm">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-zinc-400 w-4 h-4" />
-                    <input onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} className="w-full pl-10 text-sm pr-4 py-2 rounded-lg border border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-400 focus:border-blue-500 outline-none" placeholder="Search projects..." />
+                    <Search className="absolute start-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-zinc-400 w-4 h-4" />
+                    <input onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} className="w-full ps-10 text-sm pe-4 py-2 rounded-lg border border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-400 focus:border-blue-500 outline-none" placeholder="Search projects..." />
                 </div>
                 <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })} className="px-3 py-2 rounded-lg border border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white text-sm" >
                     <option value="ALL">All Status</option>

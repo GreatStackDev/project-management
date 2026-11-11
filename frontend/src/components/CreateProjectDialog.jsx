@@ -53,9 +53,9 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
     if (!isDialogOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/20 dark:bg-black/60 backdrop-blur flex items-center justify-center text-left z-50">
+        <div className="fixed inset-0 bg-black/20 dark:bg-black/60 backdrop-blur flex items-center justify-center text-start z-50">
             <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 w-full max-w-lg text-zinc-900 dark:text-zinc-200 relative">
-                <button type="button" aria-label="Close" className="absolute top-3 right-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200" onClick={() => setIsDialogOpen(false)} >
+                <button type="button" aria-label="Close" className="absolute top-3 end-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200" onClick={() => setIsDialogOpen(false)} >
                     <XIcon className="size-5" />
                 </button>
 
@@ -152,7 +152,7 @@ const CreateProjectDialog = ({ isDialogOpen, setIsDialogOpen }) => {
                                         {emailOf(userId)}
                                         {/* The lead is always on the team, so only other members can be removed */}
                                         {userId !== formData.team_lead && (
-                                            <button type="button" aria-label={`Remove ${emailOf(userId)}`} onClick={() => removeTeamMember(userId)} className="ml-1 hover:bg-blue-300/30 dark:hover:bg-blue-500/30 rounded" >
+                                            <button type="button" aria-label={`Remove ${emailOf(userId)}`} onClick={() => removeTeamMember(userId)} className="ms-1 hover:bg-blue-300/30 dark:hover:bg-blue-500/30 rounded" >
                                                 <XIcon className="w-3 h-3" />
                                             </button>
                                         )}

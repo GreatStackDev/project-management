@@ -16,7 +16,7 @@ export function NotFound() {
                 to="/"
                 className="mt-8 inline-flex items-center gap-2 px-5 py-2 text-sm rounded bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 transition"
             >
-                <ArrowLeft className="size-4" /> Back to dashboard
+                <ArrowLeft className="size-4 rtl:-scale-x-100" /> Back to dashboard
             </Link>
         </section>
     );

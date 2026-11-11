@@ -149,7 +149,7 @@ const ProjectAnalytics = ({ project, tasks }) => {
                         <div key={p.name} className="space-y-2">
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
-                                    <ArrowRightIcon className={`size-3.5 ${PRIORITY_COLORS[p.name]} bg-transparent dark:bg-transparent`} />
+                                    <ArrowRightIcon className={`size-3.5 rtl:-scale-x-100 ${PRIORITY_COLORS[p.name]} bg-transparent dark:bg-transparent`} />
                                     <span className="text-zinc-900 dark:text-zinc-200 capitalize">{p.name.toLowerCase()}</span>
                                 </div>
                                 <div className="flex items-center gap-2">

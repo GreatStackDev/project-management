@@ -35,7 +35,7 @@ const ProjectOverview = () => {
             <div className="border-b border-zinc-200 dark:border-zinc-800 p-4 flex items-center justify-between">
                 <h2 className="text-md text-zinc-800 dark:text-zinc-300">Project Overview</h2>
                 <Link to={'/projects'} className="text-sm text-zinc-600 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300 flex items-center">
-                    View all <ArrowRight className="w-4 h-4 ml-2" />
+                    View all <ArrowRight className="w-4 h-4 ms-2 rtl:-scale-x-100" />
                 </Link>
             </div>
 
@@ -68,7 +68,7 @@ const ProjectOverview = () => {
                                             {project.description || 'No description'}
                                         </p>
                                     </div>
-                                    <div className="flex items-center gap-2 ml-4">
+                                    <div className="flex items-center gap-2 ms-4">
                                         <span className={`text-xs px-2 py-1 rounded ${statusColors[project.status]}`}>
                                             {project.status.replace('_', ' ').replaceAll(/\b\w/g, c => c.toUpperCase())}
                                         </span>

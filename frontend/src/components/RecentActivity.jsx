@@ -64,7 +64,7 @@ const RecentActivity = () => {
                                                 <h4 className="text-zinc-800 dark:text-zinc-200 truncate">
                                                     {task.title}
                                                 </h4>
-                                                <span className={`ml-2 px-2 py-1 rounded text-xs ${statusColors[task.status] || "bg-zinc-300 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300"}`}>
+                                                <span className={`ms-2 px-2 py-1 rounded text-xs ${statusColors[task.status] || "bg-zinc-300 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300"}`}>
                                                     {task.status.replace("_", " ")}
                                                 </span>
                                             </div>
