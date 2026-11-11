@@ -1,5 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import './index.css'
+// Before App: sets <html dir/lang> ahead of the first render, so RTL never flashes as LTR
+import './i18n'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { store } from './app/store.js'

@@ -4,12 +4,16 @@ import { toggleTheme } from '../features/themeSlice'
 import { MoonIcon, SunIcon } from 'lucide-react'
 import { UserButton } from '@clerk/react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 const Navbar = ({ setIsSidebarOpen }) => {
 
     const dispatch = useDispatch();
     const { theme } = useSelector(state => state.theme);
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
+
+    const toggleLanguage = () => i18n.changeLanguage(i18n.language === 'ar' ? 'en' : 'ar');
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -42,6 +46,11 @@ const Navbar = ({ setIsSidebarOpen }) => {
 
                 {/* Right section */}
                 <div className="flex items-center gap-3">
+
+                    {/* Language Toggle: shows the language you'd switch to */}
+                    <button type="button" onClick={toggleLanguage} aria-label={t('nav.switchLanguage')} title={t('nav.switchLanguage')} className="size-8 flex items-center justify-center bg-white dark:bg-zinc-800 shadow rounded-lg text-sm font-medium text-gray-800 dark:text-gray-200 transition hover:scale-105 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500">
+                        {t('nav.languageShort')}
+                    </button>
 
                     {/* Theme Toggle */}
                     <button onClick={() => dispatch(toggleTheme())} className="size-8 flex items-center justify-center bg-white dark:bg-zinc-800 shadow rounded-lg transition hover:scale-105 active:scale-95">
