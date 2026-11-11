@@ -4,6 +4,7 @@ import { GitCommit, MessageSquare, Clock, Bug, Zap, Square } from "lucide-react"
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { useDateLocale } from "../hooks/use-date-locale";
 
 const typeIcons = {
     BUG: { icon: Bug, color: "text-red-500 dark:text-red-400" },
@@ -24,6 +25,7 @@ const RECENT_LIMIT = 10;
 const RecentActivity = () => {
     const { currentWorkspace } = useSelector((state) => state.workspace);
     const { t } = useTranslation();
+    const dateLocale = useDateLocale();
 
     // Newest change first; ISO timestamps sort correctly as strings, so no Date parsing per comparison
     const tasks = useMemo(
@@ -81,7 +83,7 @@ const RecentActivity = () => {
                                                     </div>
                                                 )}
                                                 <span>
-                                                    {format(new Date(task.updatedAt), "MMM d, h:mm a")}
+                                                    {format(new Date(task.updatedAt), "MMM d, h:mm a", { locale: dateLocale })}
                                                 </span>
                                             </div>
                                         </div>

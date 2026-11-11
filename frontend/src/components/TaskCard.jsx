@@ -1,11 +1,13 @@
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useDateLocale } from "../hooks/use-date-locale";
 import { priorityTexts, typeIcons } from "../lib/task-styles";
 
 // One task in the mobile list (below lg), mirroring TaskRow
 export function TaskCard({ task, selectable, selected, canEditStatus, onToggleSelect, onStatusChange }) {
     const { t } = useTranslation();
+    const dateLocale = useDateLocale();
     const { icon: TypeIcon, color } = typeIcons[task.type] || {};
     const { background, prioritycolor } = priorityTexts[task.priority] || {};
     const statusId = `status-${task.id}`;
@@ -46,7 +48,7 @@ export function TaskCard({ task, selectable, selected, canEditStatus, onToggleSe
 
             <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
                 <CalendarIcon className="size-4" />
-                {format(new Date(task.due_date), "dd MMMM")}
+                {format(new Date(task.due_date), "dd MMMM", { locale: dateLocale })}
             </div>
         </div>
     );

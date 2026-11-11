@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useDateLocale } from "../hooks/use-date-locale";
 import { CalendarIcon, MessageCircle, PenIcon } from "lucide-react";
 import { useUser } from "@clerk/react";
 import { api } from "../lib/api";
@@ -12,6 +13,7 @@ const REFRESH_MS = 10000;
 
 const TaskDetails = () => {
     const { t } = useTranslation();
+    const dateLocale = useDateLocale();
 
     const [searchParams] = useSearchParams();
     const projectId = searchParams.get("projectId");
@@ -85,7 +87,7 @@ const TaskDetails = () => {
                                             <img src={comment.user.image} alt={t("tasks.avatarAlt")} className="size-5 rounded-full" />
                                             <span className="font-medium text-gray-900 dark:text-white">{comment.user.name}</span>
                                             <span className="text-xs text-gray-400 dark:text-zinc-600">
-                                                • {format(new Date(comment.createdAt), "dd MMM yyyy, HH:mm")}
+                                                • {format(new Date(comment.createdAt), "dd MMM yyyy, HH:mm", { locale: dateLocale })}
                                             </span>
                                         </div>
                                         <p className="text-sm text-gray-900 dark:text-zinc-200">{comment.content}</p>
@@ -146,7 +148,7 @@ const TaskDetails = () => {
                         </div>
                         <div className="flex items-center gap-2">
                             <CalendarIcon className="size-4 text-gray-500 dark:text-zinc-500" />
-                            {t("taskDetails.due", { date: format(new Date(task.due_date), "dd MMM yyyy") })}
+                            {t("taskDetails.due", { date: format(new Date(task.due_date), "dd MMM yyyy", { locale: dateLocale }) })}
                         </div>
                     </div>
                 </div>
@@ -158,7 +160,7 @@ const TaskDetails = () => {
                         <h2 className="text-gray-900 dark:text-zinc-100 flex items-center gap-2"> <PenIcon className="size-4" /> {project.name}</h2>
                         {/* start_date is optional, and format() throws on an empty date */}
                         {project.start_date && (
-                            <p className="text-xs mt-3">{t("taskDetails.projectStartDate", { date: format(new Date(project.start_date), "dd MMM yyyy") })}</p>
+                            <p className="text-xs mt-3">{t("taskDetails.projectStartDate", { date: format(new Date(project.start_date), "dd MMM yyyy", { locale: dateLocale }) })}</p>
                         )}
                         <div className="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-zinc-400 mt-3">
                             <span>{t("taskDetails.projectStatus", { status: t(`projectStatus.${project.status}`) })}</span>

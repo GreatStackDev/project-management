@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { format, getDay, isSameDay, isBefore, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths } from "date-fns";
+import { format, getDay, addDays, startOfWeek, isSameDay, isBefore, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths } from "date-fns";
 import { CalendarIcon, Clock, User, ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useDateLocale } from "../hooks/use-date-locale";
 
 const typeColors = {
     BUG: "bg-red-200 text-red-800 dark:bg-red-500 dark:text-red-900",
@@ -19,6 +20,7 @@ const priorityBorders = {
 
 const ProjectCalendar = ({ tasks }) => {
     const { t } = useTranslation();
+    const dateLocale = useDateLocale();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -34,7 +36,7 @@ const ProjectCalendar = ({ tasks }) => {
 
     const monthStart = startOfMonth(currentMonth);
     const daysInMonth = eachDayOfInterval({ start: monthStart, end: endOfMonth(currentMonth) });
-    // getDay is 0 for Sunday, matching the Sun-first header, so it's exactly the number of empty cells before the 1st
+    // getDay is 0 for Sunday, matching the Sun-first header (startOfWeek defaults to Sunday too), so it's exactly the number of empty cells before the 1st
     const leadingBlanks = Array.from({ length: getDay(monthStart) }, (_, i) => `blank-${i}`);
 
     const handleMonthChange = (direction) => {
@@ -54,7 +56,7 @@ const ProjectCalendar = ({ tasks }) => {
                             <button onClick={() => handleMonthChange("prev")}>
                                 <ChevronLeft className="size-5 rtl:-scale-x-100 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white" />
                             </button>
-                            <span className="text-zinc-900 dark:text-white">{format(currentMonth, "MMMM yyyy")}</span>
+                            <span className="text-zinc-900 dark:text-white">{format(currentMonth, "MMMM yyyy", { locale: dateLocale })}</span>
                             <button onClick={() => handleMonthChange("next")}>
                                 <ChevronRight className="size-5 rtl:-scale-x-100 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white" />
                             </button>
@@ -62,7 +64,7 @@ const ProjectCalendar = ({ tasks }) => {
                     </div>
 
                     <div className="grid grid-cols-7 text-xs text-zinc-600 dark:text-zinc-400 mb-2 text-center">
-                        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                        {Array.from({ length: 7 }, (_, i) => format(addDays(startOfWeek(monthStart), i), "EEE", { locale: dateLocale })).map((day) => (
                             <div key={day}>{day}</div>
                         ))}
                     </div>
@@ -99,7 +101,7 @@ const ProjectCalendar = ({ tasks }) => {
                 {getTasksForDate(selectedDate).length > 0 && (
                     <div className=" not-dark:bg-white mt-6 dark:bg-gradient-to-br dark:from-zinc-800/70 dark:to-zinc-900/50 border border-zinc-300 dark:border-zinc-800 rounded-lg p-4">
                         <h3 className="text-zinc-900 dark:text-white text-lg mb-3">
-                            {t("calendar.tasksFor", { date: format(selectedDate, "MMM d, yyyy") })}
+                            {t("calendar.tasksFor", { date: format(selectedDate, "MMM d, yyyy", { locale: dateLocale }) })}
                         </h3>
                         <div className="space-y-3">
                             {getTasksForDate(selectedDate).map((task) => (
@@ -151,7 +153,7 @@ const ProjectCalendar = ({ tasks }) => {
                                             {t(`taskType.${task.type}`)}
                                         </span>
                                     </div>
-                                    <p className="text-xs text-zinc-600 dark:text-zinc-400">{format(task.due_date, "MMM d")}</p>
+                                    <p className="text-xs text-zinc-600 dark:text-zinc-400">{format(task.due_date, "MMM d", { locale: dateLocale })}</p>
                                 </div>
                             ))}
                         </div>
@@ -174,7 +176,7 @@ const ProjectCalendar = ({ tasks }) => {
                                         </span>
                                     </div>
                                     <p className="text-xs text-red-600 dark:text-red-300">
-                                        {t("calendar.due", { date: format(task.due_date, "MMM d") })}
+                                        {t("calendar.due", { date: format(task.due_date, "MMM d", { locale: dateLocale }) })}
                                     </p>
                                 </div>
                             ))}

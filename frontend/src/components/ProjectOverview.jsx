@@ -6,9 +6,11 @@ import { useSelector } from "react-redux";
 import CreateProjectDialog from "./CreateProjectDialog";
 import { usePermissions } from "../hooks/use-permissions";
 import { useTranslation } from "react-i18next";
+import { useDateLocale } from "../hooks/use-date-locale";
 
 const ProjectOverview = () => {
     const { t } = useTranslation();
+    const dateLocale = useDateLocale();
     const statusColors = {
         PLANNING: "bg-zinc-200 text-zinc-800 dark:bg-zinc-600 dark:text-zinc-200",
         ACTIVE: "bg-emerald-200 text-emerald-800 dark:bg-emerald-500 dark:text-emerald-900",
@@ -89,7 +91,7 @@ const ProjectOverview = () => {
                                         {project.end_date && (
                                             <div className="flex items-center gap-1">
                                                 <Calendar className="w-3 h-3" />
-                                                {format(new Date(project.end_date), "MMM d, yyyy")}
+                                                {format(new Date(project.end_date), "MMM d, yyyy", { locale: dateLocale })}
                                             </div>
                                         )}
                                     </div>

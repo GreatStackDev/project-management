@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { useDateLocale } from "../hooks/use-date-locale";
 import { api } from "../lib/api";
 import { addTask } from "../features/workspaceSlice";
 
@@ -19,6 +20,7 @@ const emptyForm = {
 
 export default function CreateTaskDialog({ showCreateTask, setShowCreateTask, projectId }) {
     const { t } = useTranslation();
+    const dateLocale = useDateLocale();
     const currentWorkspace = useSelector((state) => state.workspace?.currentWorkspace || null);
     const dispatch = useDispatch();
     const project = currentWorkspace?.projects.find((p) => p.id === projectId);
@@ -118,7 +120,7 @@ export default function CreateTaskDialog({ showCreateTask, setShowCreateTask, pr
                         </div>
                         {formData.due_date && (
                             <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                                {format(new Date(formData.due_date), "PPP")}
+                                {format(new Date(formData.due_date), "PPP", { locale: dateLocale })}
                             </p>
                         )}
                     </div>

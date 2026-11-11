@@ -2,11 +2,13 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useDateLocale } from "../hooks/use-date-locale";
 import { priorityTexts, typeIcons } from "../lib/task-styles";
 
 // One task in the desktop table; clicking the row opens the task, except on the checkbox and status cells
 export function TaskRow({ task, selectable, selected, canEditStatus, onToggleSelect, onStatusChange }) {
     const { t } = useTranslation();
+    const dateLocale = useDateLocale();
     const navigate = useNavigate();
     const { icon: TypeIcon, color } = typeIcons[task.type] || {};
     const { background, prioritycolor } = priorityTexts[task.priority] || {};
@@ -46,7 +48,7 @@ export function TaskRow({ task, selectable, selected, canEditStatus, onToggleSel
             <td className="px-4 py-2">
                 <div className="flex items-center gap-1 text-zinc-600 dark:text-zinc-400">
                     <CalendarIcon className="size-4" />
-                    {format(new Date(task.due_date), "dd MMMM")}
+                    {format(new Date(task.due_date), "dd MMMM", { locale: dateLocale })}
                 </div>
             </td>
         </tr>
