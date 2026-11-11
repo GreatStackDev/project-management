@@ -1,0 +1,369 @@
+{
+    "nav": {
+        "switchLanguage": "التبديل إلى الإنجليزية",
+        "languageShort": "EN"
+    },
+    "common": {
+        "save": "حفظ",
+        "saving": "جارٍ الحفظ...",
+        "cancel": "إلغاء",
+        "create": "إنشاء",
+        "creating": "جارٍ الإنشاء...",
+        "delete": "حذف",
+        "close": "إغلاق",
+        "loading": "جارٍ التحميل...",
+        "search": "بحث",
+        "viewAll": "عرض الكل",
+        "showLess": "عرض أقل",
+        "unassigned": "غير مُسنَدة",
+        "tryAgain": "إعادة المحاولة"
+    },
+    "taskStatus": {
+        "TODO": "قيد الانتظار",
+        "IN_PROGRESS": "قيد التنفيذ",
+        "DONE": "مكتملة"
+    },
+    "projectStatus": {
+        "PLANNING": "قيد التخطيط",
+        "ACTIVE": "نشط",
+        "ON_HOLD": "متوقف مؤقتًا",
+        "COMPLETED": "مكتمل",
+        "CANCELLED": "ملغى"
+    },
+    "priority": {
+        "LOW": "منخفضة",
+        "MEDIUM": "متوسطة",
+        "HIGH": "عالية"
+    },
+    "priorityLabel": "أولوية {{priority}}",
+    "taskType": {
+        "TASK": "مهمة",
+        "BUG": "خلل",
+        "FEATURE": "ميزة",
+        "IMPROVEMENT": "تحسين",
+        "OTHER": "أخرى"
+    },
+    "role": {
+        "ADMIN": "مسؤول",
+        "MEMBER": "عضو",
+        "fallback": "مستخدم"
+    },
+    "layout": {
+        "loadError": "تعذّر تحميل مساحات العمل",
+        "noWorkspaceTitle": "لا توجد مساحة عمل بعد",
+        "noWorkspaceHint": "أنشئ مساحة عمل، أو انضم إلى مساحة دُعيت إليها."
+    },
+    "sidebar": {
+        "dashboard": "لوحة التحكم",
+        "projects": "المشاريع",
+        "team": "الفريق",
+        "settings": "الإعدادات",
+        "myTasks": "مهامي",
+        "noTasksAssigned": "لا توجد مهام مُسنَدة",
+        "projectTabs": {
+            "tasks": "المهام",
+            "analytics": "التحليلات",
+            "calendar": "التقويم",
+            "settings": "الإعدادات"
+        }
+    },
+    "navbar": {
+        "searchProjects": "البحث في المشاريع",
+        "searchPlaceholder": "ابحث في المشاريع..."
+    },
+    "workspace": {
+        "select": "اختر مساحة العمل",
+        "count_zero": "لا توجد مساحات عمل",
+        "count_one": "مساحة عمل واحدة",
+        "count_two": "مساحتا عمل",
+        "count_few": "{{count}} مساحات عمل",
+        "count_many": "{{count}} مساحة عمل",
+        "count_other": "{{count}} مساحة عمل",
+        "heading": "مساحات العمل",
+        "memberCount_zero": "لا يوجد أعضاء",
+        "memberCount_one": "عضو واحد",
+        "memberCount_two": "عضوان",
+        "memberCount_few": "{{count}} أعضاء",
+        "memberCount_many": "{{count}} عضوًا",
+        "memberCount_other": "{{count}} عضو",
+        "create": "إنشاء مساحة عمل"
+    },
+    "invitations": {
+        "heading": "الدعوات",
+        "join": "انضمام",
+        "joining": "جارٍ الانضمام...",
+        "joined": "انضممت إلى {{name}}",
+        "pendingHeading": "الدعوات المعلّقة ({{total}})",
+        "revoke": "إلغاء الدعوة",
+        "revoking": "جارٍ الإلغاء...",
+        "revoked": "أُلغيت الدعوة المرسلة إلى {{email}}"
+    },
+    "dashboard": {
+        "welcome": "مرحبًا بعودتك، {{name}}",
+        "subtitle": "إليك آخر مستجدات مشاريعك اليوم",
+        "newProject": "مشروع جديد",
+        "stats": {
+            "totalProjects": "إجمالي المشاريع",
+            "projectsIn": "مشاريع في {{workspace}}",
+            "completedProjects": "المشاريع المكتملة",
+            "ofTotal": "من أصل {{total}}",
+            "myTasks": "مهامي",
+            "assignedToMe": "مُسنَدة إليّ",
+            "overdue": "متأخرة",
+            "needAttention": "تحتاج إلى متابعة"
+        },
+        "projectOverview": {
+            "title": "نظرة عامة على المشاريع",
+            "noProjects": "لا توجد مشاريع بعد",
+            "createFirst": "أنشئ مشروعك الأول",
+            "noDescription": "لا يوجد وصف",
+            "memberCount_zero": "لا يوجد أعضاء",
+            "memberCount_one": "عضو واحد",
+            "memberCount_two": "عضوان",
+            "memberCount_few": "{{count}} أعضاء",
+            "memberCount_many": "{{count}} عضوًا",
+            "memberCount_other": "{{count}} عضو",
+            "progress": "التقدّم"
+        },
+        "recentActivity": {
+            "title": "النشاط الأخير",
+            "empty": "لا يوجد نشاط حديث"
+        },
+        "tasksSummary": {
+            "myTasks": "مهامي",
+            "myTasksEmpty": "لا توجد مهام مُسنَدة إليك",
+            "overdue": "متأخرة",
+            "overdueEmpty": "لا توجد مهام متأخرة",
+            "inProgress": "قيد التنفيذ",
+            "inProgressEmpty": "لا توجد مهام قيد التنفيذ",
+            "viewMore_zero": "عرض المزيد",
+            "viewMore_one": "عرض مهمة أخرى",
+            "viewMore_two": "عرض مهمتين أخريين",
+            "viewMore_few": "عرض {{count}} مهام أخرى",
+            "viewMore_many": "عرض {{count}} مهمة أخرى",
+            "viewMore_other": "عرض {{count}} مهمة أخرى"
+        }
+    },
+    "notFound": {
+        "title": "الصفحة غير موجودة",
+        "description": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+        "backToDashboard": "العودة إلى لوحة التحكم"
+    },
+    "errors": {
+        "generic": "حدث خطأ ما"
+    },
+    "projects": {
+        "title": "المشاريع",
+        "subtitle": "أدِر مشاريعك وتابِع تقدّمها",
+        "newProject": "مشروع جديد",
+        "searchPlaceholder": "ابحث في المشاريع...",
+        "allStatus": "كل الحالات",
+        "allPriority": "كل الأولويات",
+        "createProject": "إنشاء مشروع",
+        "empty": {
+            "title": "لا توجد مشاريع",
+            "description": "أنشئ مشروعك الأول للبدء"
+        },
+        "card": {
+            "noDescription": "لا يوجد وصف",
+            "progress": "التقدم"
+        }
+    },
+    "projectDetails": {
+        "notFound": "المشروع غير موجود",
+        "backToProjects": "العودة إلى المشاريع",
+        "newTask": "مهمة جديدة",
+        "stats": {
+            "totalTasks": "إجمالي المهام",
+            "completed": "المكتملة",
+            "inProgress": "قيد التنفيذ",
+            "teamMembers": "أعضاء الفريق"
+        },
+        "tabs": {
+            "tasks": "المهام",
+            "calendar": "التقويم",
+            "analytics": "التحليلات",
+            "settings": "الإعدادات"
+        }
+    },
+    "createProject": {
+        "title": "إنشاء مشروع جديد",
+        "inWorkspace": "في مساحة العمل: <name>{{name}}</name>",
+        "nameLabel": "اسم المشروع",
+        "namePlaceholder": "أدخل اسم المشروع",
+        "descriptionLabel": "الوصف",
+        "descriptionPlaceholder": "صِف مشروعك",
+        "statusLabel": "الحالة",
+        "priorityLabel": "الأولوية",
+        "startDate": "تاريخ البدء",
+        "endDate": "تاريخ الانتهاء",
+        "leadLabel": "قائد الفريق",
+        "membersLabel": "أعضاء الفريق",
+        "addMembers": "إضافة أعضاء إلى الفريق",
+        "removeMember": "إزالة {{email}}",
+        "submit": "إنشاء المشروع",
+        "created": "تم إنشاء المشروع"
+    },
+    "projectSettings": {
+        "detailsTitle": "تفاصيل المشروع",
+        "readOnlyNotice": "يمكن لمسؤولي مساحة العمل وقائد الفريق فقط تعديل هذا المشروع.",
+        "nameLabel": "اسم المشروع",
+        "descriptionLabel": "الوصف",
+        "statusLabel": "الحالة",
+        "priorityLabel": "الأولوية",
+        "startDate": "تاريخ البدء",
+        "endDate": "تاريخ الانتهاء",
+        "progressLabel": "التقدم: {{progress}}%",
+        "saveChanges": "حفظ التغييرات",
+        "saved": "تم حفظ المشروع",
+        "membersTitle": "أعضاء الفريق",
+        "addMember": "إضافة عضو إلى المشروع",
+        "unknownMember": "غير معروف",
+        "teamLead": "قائد الفريق"
+    },
+    "analytics": {
+        "completionRate": "نسبة الإنجاز",
+        "activeTasks": "المهام النشطة",
+        "overdueTasks": "المهام المتأخرة",
+        "teamSize": "حجم الفريق",
+        "byStatus": "المهام حسب الحالة",
+        "byType": "المهام حسب النوع",
+        "byPriority": "المهام حسب الأولوية",
+        "taskCount_zero": "لا مهام",
+        "taskCount_one": "مهمة واحدة",
+        "taskCount_two": "مهمتان",
+        "taskCount_few": "{{count}} مهام",
+        "taskCount_many": "{{count}} مهمة",
+        "taskCount_other": "{{count}} مهمة"
+    },
+    "calendar": {
+        "title": "تقويم المهام",
+        "taskCount_zero": "لا مهام",
+        "taskCount_one": "مهمة واحدة",
+        "taskCount_two": "مهمتان",
+        "taskCount_few": "{{count}} مهام",
+        "taskCount_many": "{{count}} مهمة",
+        "taskCount_other": "{{count}} مهمة",
+        "tasksFor": "مهام {{date}}",
+        "upcomingTitle": "المهام القادمة",
+        "noUpcoming": "لا توجد مهام قادمة",
+        "overdueTitle": "المهام المتأخرة ({{total}})",
+        "due": "تاريخ الاستحقاق {{date}}",
+        "moreCount_zero": "لا مزيد",
+        "moreCount_one": "+مهمة أخرى",
+        "moreCount_two": "+مهمتان أخريان",
+        "moreCount_few": "+{{count}} مهام أخرى",
+        "moreCount_many": "+{{count}} مهمة أخرى",
+        "moreCount_other": "+{{count}} مهمة أخرى"
+    },
+    "addMember": {
+        "title": "إضافة عضو إلى المشروع",
+        "addingTo": "الإضافة إلى المشروع: <name>{{name}}</name>",
+        "memberLabel": "عضو مساحة العمل",
+        "selectMember": "اختر عضوًا",
+        "everyoneAdded": "جميع الأعضاء مضافون إلى هذا المشروع بالفعل",
+        "adding": "جارٍ الإضافة...",
+        "submit": "إضافة العضو",
+        "added": "تمت إضافة العضو"
+    },
+    "tasks": {
+        "columns": {
+            "title": "العنوان",
+            "type": "النوع",
+            "priority": "الأولوية",
+            "status": "الحالة",
+            "assignee": "المُسنَد إليه",
+            "dueDate": "تاريخ الاستحقاق"
+        },
+        "filters": {
+            "allStatuses": "كل الحالات",
+            "allTypes": "كل الأنواع",
+            "allPriorities": "كل الأولويات",
+            "allAssignees": "كل المُسنَد إليهم",
+            "reset": "إعادة تعيين",
+            "by": {
+                "status": "تصفية حسب الحالة",
+                "type": "تصفية حسب النوع",
+                "priority": "تصفية حسب الأولوية",
+                "assignee": "تصفية حسب المُسنَد إليه"
+            }
+        },
+        "toast": {
+            "updatingStatus": "جارٍ تحديث الحالة...",
+            "statusUpdated": "تم تحديث حالة المهمة",
+            "deleting": "جارٍ حذف المهام...",
+            "deleted": "تم حذف المهام"
+        },
+        "confirmDelete": "هل أنت متأكد من حذف المهام المحددة؟",
+        "selectAllVisible": "تحديد كل المهام الظاهرة",
+        "selectTask": "تحديد {{title}}",
+        "noTasksForFilters": "لا توجد مهام تطابق عوامل التصفية المحددة.",
+        "statusLocked": "لا يمكن تغيير هذا إلا للمسؤولين أو قائد الفريق أو المُسنَد إليه",
+        "avatarAlt": "الصورة الرمزية"
+    },
+    "createTask": {
+        "heading": "إنشاء مهمة جديدة",
+        "title": "العنوان",
+        "titlePlaceholder": "عنوان المهمة",
+        "description": "الوصف",
+        "descriptionPlaceholder": "صف المهمة",
+        "type": "النوع",
+        "priority": "الأولوية",
+        "assignee": "المُسنَد إليه",
+        "selectAssignee": "اختر المُسنَد إليه…",
+        "status": "الحالة",
+        "dueDate": "تاريخ الاستحقاق",
+        "submit": "إنشاء المهمة",
+        "toastCreated": "تم إنشاء المهمة"
+    },
+    "taskDetails": {
+        "notFound": "المهمة غير موجودة.",
+        "discussion": "نقاش المهمة ({{total}})",
+        "noComments": "لا توجد تعليقات بعد. كن أول من يعلّق!",
+        "commentLabel": "اكتب تعليقًا",
+        "commentPlaceholder": "اكتب تعليقًا...",
+        "posting": "جارٍ النشر...",
+        "post": "نشر",
+        "due": "تاريخ الاستحقاق: {{date}}",
+        "projectDetails": "تفاصيل المشروع",
+        "projectStartDate": "تاريخ بدء المشروع: {{date}}",
+        "projectStatus": "الحالة: {{status}}",
+        "projectPriority": "الأولوية: {{priority}}",
+        "projectProgress": "التقدم: {{progress}}%"
+    },
+    "team": {
+        "heading": "الفريق",
+        "subtitle": "إدارة أعضاء الفريق ومساهماتهم",
+        "inviteMember": "دعوة عضو",
+        "stats": {
+            "totalMembers": "إجمالي الأعضاء",
+            "activeProjects": "المشاريع النشطة",
+            "totalTasks": "إجمالي المهام"
+        },
+        "searchPlaceholder": "ابحث عن أعضاء الفريق...",
+        "empty": {
+            "noMembers": "لا يوجد أعضاء في الفريق بعد",
+            "noMembersHint": "ادعُ أعضاء الفريق لبدء التعاون",
+            "noMatches": "لا يوجد أعضاء يطابقون بحثك",
+            "noMatchesHint": "جرّب تعديل عبارة البحث"
+        }
+    },
+    "members": {
+        "columns": {
+            "name": "الاسم",
+            "email": "البريد الإلكتروني",
+            "role": "الدور"
+        },
+        "unknownUser": "مستخدم غير معروف"
+    },
+    "invite": {
+        "heading": "دعوة عضو إلى الفريق",
+        "invitingTo": "الدعوة إلى مساحة العمل:",
+        "emailLabel": "البريد الإلكتروني",
+        "emailPlaceholder": "أدخل البريد الإلكتروني",
+        "roleLabel": "الدور",
+        "sending": "جارٍ الإرسال...",
+        "submit": "إرسال الدعوة",
+        "toastSent": "تم إرسال الدعوة إلى {{email}}"
+    }
+}
