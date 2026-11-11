@@ -1,0 +1,108 @@
+import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { usePermissions } from "../hooks/use-permissions";
+import { Plus, Search, FolderOpen } from "lucide-react";
+import ProjectCard from "../components/ProjectCard";
+import CreateProjectDialog from "../components/CreateProjectDialog";
+
+export default function Projects() {
+
+    const { t } = useTranslation();
+    const projects = useSelector(
+        (state) => state?.workspace?.currentWorkspace?.projects || []
+    );
+
+    // The URL owns the search term, so the navbar search can link here (and re-link while already here)
+    const [searchParams, setSearchParams] = useSearchParams();
+    const searchTerm = searchParams.get("search") ?? "";
+    const { isAdmin } = usePermissions();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [filters, setFilters] = useState({
+        status: "ALL",
+        priority: "ALL",
+    });
+
+    // replace: typing shouldn't add a history entry per keystroke
+    const setSearchTerm = (value) => setSearchParams(value ? { search: value } : {}, { replace: true });
+
+    const filteredProjects = useMemo(() => {
+        const term = searchTerm.toLowerCase();
+        return projects.filter(
+            (project) =>
+                (!term ||
+                    project.name.toLowerCase().includes(term) ||
+                    project.description?.toLowerCase().includes(term)) &&
+                (filters.status === "ALL" || project.status === filters.status) &&
+                (filters.priority === "ALL" || project.priority === filters.priority)
+        );
+    }, [projects, searchTerm, filters]);
+
+    return (
+        <div className="space-y-6 max-w-6xl mx-auto">
+            {/* Header */}
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                <div>
+                    <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white mb-1"> {t("projects.title")} </h1>
+                    <p className="text-gray-500 dark:text-zinc-400 text-sm"> {t("projects.subtitle")} </p>
+                </div>
+                {isAdmin && (
+                    <>
+                        <button type="button" onClick={() => setIsDialogOpen(true)} className="flex items-center px-5 py-2 text-sm rounded bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:opacity-90 transition" >
+                            <Plus className="size-4 me-2" /> {t("projects.newProject")}
+                        </button>
+                        <CreateProjectDialog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+                    </>
+                )}
+            </div>
+
+            {/* Search and Filters */}
+            <div className="flex flex-col md:flex-row gap-4">
+                <div className="relative w-full max-w-sm">
+                    <Search className="absolute start-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-zinc-400 w-4 h-4" />
+                    <input onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} className="w-full ps-10 text-sm pe-4 py-2 rounded-lg border border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-400 focus:border-blue-500 outline-none" placeholder={t("projects.searchPlaceholder")} />
+                </div>
+                <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })} className="px-3 py-2 rounded-lg border border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white text-sm" >
+                    <option value="ALL">{t("projects.allStatus")}</option>
+                    <option value="ACTIVE">{t("projectStatus.ACTIVE")}</option>
+                    <option value="PLANNING">{t("projectStatus.PLANNING")}</option>
+                    <option value="COMPLETED">{t("projectStatus.COMPLETED")}</option>
+                    <option value="ON_HOLD">{t("projectStatus.ON_HOLD")}</option>
+                    <option value="CANCELLED">{t("projectStatus.CANCELLED")}</option>
+                </select>
+                <select value={filters.priority} onChange={(e) => setFilters({ ...filters, priority: e.target.value })} className="px-3 py-2 rounded-lg border border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white text-sm" >
+                    <option value="ALL">{t("projects.allPriority")}</option>
+                    <option value="HIGH">{t("priority.HIGH")}</option>
+                    <option value="MEDIUM">{t("priority.MEDIUM")}</option>
+                    <option value="LOW">{t("priority.LOW")}</option>
+                </select>
+            </div>
+
+            {/* Projects Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProjects.length === 0 ? (
+                    <div className="col-span-full text-center py-16">
+                        <div className="w-24 h-24 mx-auto mb-6 bg-gray-200 dark:bg-zinc-800 rounded-full flex items-center justify-center">
+                            <FolderOpen className="w-12 h-12 text-gray-400 dark:text-zinc-500" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                            {t("projects.empty.title")}
+                        </h3>
+                        <p className="text-gray-500 dark:text-zinc-400 mb-6 text-sm">
+                            {t("projects.empty.description")}
+                        </p>
+                        <button onClick={() => setIsDialogOpen(true)} className="flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mx-auto text-sm" >
+                            <Plus className="size-4" />
+                            {t("projects.createProject")}
+                        </button>
+                    </div>
+                ) : (
+                    filteredProjects.map((project) => (
+                        <ProjectCard key={project.id} project={project} />
+                    ))
+                )}
+            </div>
+        </div>
+    );
+}
