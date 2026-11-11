@@ -14,12 +14,13 @@ const ProjectSidebar = () => {
         (state) => state?.workspace?.currentWorkspace?.projects || []
     );
 
+    // `key` is the ?tab= value ProjectDetails reads, so it must never be a translated label
     const getProjectSubItems = (projectId) => [
-        { title: 'Tasks', icon: KanbanIcon, url: `/projectsDetail?id=${projectId}&tab=tasks` },
-        { title: 'Analytics', icon: ChartColumnIcon, url: `/projectsDetail?id=${projectId}&tab=analytics` },
-        { title: 'Calendar', icon: CalendarIcon, url: `/projectsDetail?id=${projectId}&tab=calendar` },
-        { title: 'Settings', icon: SettingsIcon, url: `/projectsDetail?id=${projectId}&tab=settings` }
-    ];
+        { key: 'tasks', title: 'Tasks', icon: KanbanIcon },
+        { key: 'analytics', title: 'Analytics', icon: ChartColumnIcon },
+        { key: 'calendar', title: 'Calendar', icon: CalendarIcon },
+        { key: 'settings', title: 'Settings', icon: SettingsIcon },
+    ].map((item) => ({ ...item, url: `/projectsDetail?id=${projectId}&tab=${item.key}` }));
 
     const toggleProject = (id) => {
         const newSet = new Set(expandedProjects);
@@ -56,10 +57,10 @@ const ProjectSidebar = () => {
                                     const isActive =
                                         location.pathname === `/projectsDetail` &&
                                         searchParams.get('id') === project.id &&
-                                        searchParams.get('tab') === subItem.title.toLowerCase();
+                                        searchParams.get('tab') === subItem.key;
 
                                     return (
-                                        <Link key={subItem.title} to={subItem.url} className={`flex items-center gap-3 px-3 py-1.5 rounded-lg transition-colors duration-200 text-xs ${isActive ? 'bg-blue-100 text-blue-600 hover:bg-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500/20' : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800'}`} >
+                                        <Link key={subItem.key}to={subItem.url} className={`flex items-center gap-3 px-3 py-1.5 rounded-lg transition-colors duration-200 text-xs ${isActive ? 'bg-blue-100 text-blue-600 hover:bg-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500/20' : 'text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800'}`} >
                                             <subItem.icon className="size-3" />
                                             {subItem.title}
                                         </Link>
